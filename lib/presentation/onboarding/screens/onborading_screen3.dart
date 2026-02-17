@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:restaurant_app/features/onboarding/presentation/widgets/custom_bottom_button_for_onboarding.dart';
-import 'package:restaurant_app/features/onboarding/presentation/widgets/dob_step.dart';
-import 'package:restaurant_app/features/onboarding/presentation/widgets/gender_step.dart';
-import 'package:restaurant_app/features/onboarding/presentation/widgets/height_step.dart';
+import 'package:restaurant_app/presentation/onboarding/widgets/custom_bottom_button_for_onboarding.dart';
+import 'package:restaurant_app/presentation/onboarding/widgets/dob_step.dart';
+import 'package:restaurant_app/presentation/onboarding/widgets/gender_step.dart';
+import 'package:restaurant_app/presentation/onboarding/widgets/height_step.dart';
 
 class OnboradingScreen3 extends StatefulWidget {
   const OnboradingScreen3({super.key});

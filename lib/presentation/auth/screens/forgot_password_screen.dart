@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:restaurant_app/features/auth/presentation/widgets/custom_text_field.dart';
+import 'package:restaurant_app/presentation/auth/widgets/custom_text_field.dart';
+
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
