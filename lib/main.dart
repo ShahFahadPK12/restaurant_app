@@ -8,6 +8,7 @@ import 'package:restaurant_app/presentation/auth/screens/forgot_password_screen2
 import 'package:restaurant_app/presentation/auth/screens/login_screen.dart';
 import 'package:restaurant_app/presentation/auth/screens/sign_in_screen.dart';
 import 'package:restaurant_app/presentation/auth/screens/sign_up_screen.dart';
+import 'package:restaurant_app/presentation/home/screens/home_screen.dart';
 import 'package:restaurant_app/presentation/onboarding/screens/onboarding_screen1.dart';
 import 'package:restaurant_app/presentation/onboarding/screens/onboarding_screen2.dart';
 import 'package:restaurant_app/presentation/onboarding/screens/onborading_screen3.dart';
@@ -15,7 +16,6 @@ import 'package:restaurant_app/presentation/splash/screen/splash_screen.dart';
 import 'package:restaurant_app/presentation/splash/screen/splash_screen1.dart';
 import 'package:restaurant_app/presentation/splash/screen/splash_screen2.dart';
 import 'package:restaurant_app/presentation/splash/screen/splash_screen3.dart';
-
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -89,6 +89,7 @@ class MyApp extends StatelessWidget {
               name: "/onboardingScreen3",
               page: () => OnboradingScreen3(),
             ),
+            GetPage(name: "/home", page: () => HomeScreen()),
           ],
 
           home: SplashScreen(),

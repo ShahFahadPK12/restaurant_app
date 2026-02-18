@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-class GenderStep extends StatefulWidget {
-  const GenderStep({super.key});
+class OnboardingScreen4 extends StatefulWidget {
+  const OnboardingScreen4({super.key});
 
   @override
-  State<GenderStep> createState() => _GenderStepState();
+  State<OnboardingScreen4> createState() => _OnboardingScreen4State();
 }
 
-class _GenderStepState extends State<GenderStep> {
+class _OnboardingScreen4State extends State<OnboardingScreen4> {
   String? selectedGender;
 
   @override

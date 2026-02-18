@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-class DateOfBirthStep extends StatefulWidget {
-  const DateOfBirthStep({super.key});
+class OnboardingScreen5 extends StatefulWidget {
+  const OnboardingScreen5({super.key});
 
   @override
-  State<DateOfBirthStep> createState() => _DateOfBirthStepState();
+  State<OnboardingScreen5> createState() => _OnboardingScreen5State();
 }
 
-class _DateOfBirthStepState extends State<DateOfBirthStep> {
+class _OnboardingScreen5State extends State<OnboardingScreen5> {
   DateTime? selectedDate;
   final TextEditingController _controller = TextEditingController();
 
