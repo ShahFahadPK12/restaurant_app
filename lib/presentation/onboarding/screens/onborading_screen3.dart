@@ -295,7 +295,8 @@ class CompletionBottomSheet extends StatelessWidget {
                 text: "Go to Dashboard",
                 onTap: () {
                   Navigator.pop(context);
-                  Get.toNamed("/home");
+                  //Get.toNamed("/home");
+                  Get.offAllNamed("/main");
                 },
               ),
             ],

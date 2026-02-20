@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:restaurant_app/presentation/home/widgets/nutritions_box.dart';
+import 'package:restaurant_app/presentation/home/widgets/today_nutrition_sheet.dart';
+import 'package:restaurant_app/presentation/settings/screens/settings_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -13,6 +15,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   String selectedDay = "Today";
   int expandedIndex = -1;
+  int currentIndex = 0;
   DateTime? selectedDate;
   final TextEditingController _controller = TextEditingController();
 
@@ -34,39 +37,109 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  final List<Widget> screens = [
+    HomeScreen(),
+    // PantryScreen(),
+    // GroceriesScreen(),
+    // FoodPrefScreen(),
+    SettingsScreen(), // 👈 yahan add karo
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromRGBO(235, 235, 235, 1),
       extendBodyBehindAppBar: true,
 
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Color.fromRGBO(255, 255, 255, 1),
-        currentIndex: 0,
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.black,
-        unselectedItemColor: Colors.grey,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.kitchen), label: "Pantry"),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart),
-            label: "Groceries",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.fastfood),
-            label: "Food Pref",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: "Settings",
-          ),
-        ],
-      ),
+      // bottomNavigationBar: Container(
+      //   decoration: BoxDecoration(
+      //     color: const Color.fromARGB(255, 24, 24, 24),
 
+      //     // 👇 Bottom corners radius
+      //     borderRadius: const BorderRadius.only(
+      //       bottomLeft: Radius.circular(24),
+      //       bottomRight: Radius.circular(24),
+      //     ),
+
+      //     // 👇 Box Shadow
+      //     boxShadow: [
+      //       BoxShadow(
+      //         color: Colors.black.withOpacity(0.15),
+      //         blurRadius: 10,
+      //         spreadRadius: 2,
+      //         offset: const Offset(0, -3), // shadow upar ki taraf
+      //       ),
+      //     ],
+      //   ),
+      //   child: ClipRRect(
+      //     borderRadius: const BorderRadius.only(
+      //       bottomLeft: Radius.circular(24),
+      //       bottomRight: Radius.circular(24),
+      //     ),
+      //     child: BottomNavigationBar(
+      //       backgroundColor: Color.fromRGBO(255, 255, 255, 1),
+      //       //currentIndex: 0,
+      //       type: BottomNavigationBarType.fixed,
+      //       selectedItemColor: Colors.black,
+      //       unselectedItemColor: Colors.grey,
+      //       selectedLabelStyle: TextStyle(
+      //         fontSize: 12,
+      //         fontWeight: FontWeight.w500,
+      //       ),
+      //       currentIndex: currentIndex,
+      //       onTap: (index) {
+      //         setState(() {
+      //           currentIndex = index;
+      //         });
+      //       },
+      //       items: [
+      //         BottomNavigationBarItem(
+      //           icon: Image.asset(
+      //             "assets/home/home.png",
+      //             width: 20,
+      //             height: 20,
+      //           ),
+      //           label: "Home",
+      //         ),
+      //         BottomNavigationBarItem(
+      //           icon: Image.asset(
+      //             "assets/home/panttery.png",
+      //             width: 20,
+      //             height: 20,
+      //           ),
+      //           label: "Pantry",
+      //         ),
+      //         BottomNavigationBarItem(
+      //           icon: Image.asset(
+      //             "assets/home/grociry.png",
+      //             width: 20,
+      //             height: 20,
+      //           ),
+      //           label: "Groceries",
+      //         ),
+      //         BottomNavigationBarItem(
+      //           icon: Image.asset(
+      //             "assets/home/food-pref.png",
+      //             width: 20,
+      //             height: 20,
+      //           ),
+      //           label: "Food Pref",
+      //         ),
+      //         BottomNavigationBarItem(
+      //           icon: Image.asset(
+      //             "assets/home/setting.png",
+      //             width: 20,
+      //             height: 20,
+      //           ),
+      //           label: "Settings",
+      //         ),
+      //       ],
+      //     ),
+      //   ),
+      // ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
+          padding: EdgeInsets.symmetric(horizontal: 4.6.w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -465,13 +538,44 @@ class _HomeScreenState extends State<HomeScreen> {
                             borderRadius: BorderRadius.circular(16),
                             color: Color.fromRGBO(10, 6, 21, 1),
                           ),
-                          child: Text(
-                            "View Details",
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              height: 1,
-                              fontWeight: FontWeight.w400,
-                              color: Color.fromRGBO(255, 255, 255, 1),
+                          child: GestureDetector(
+                            onTap: () {
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                backgroundColor: Colors.transparent,
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(20),
+                                    topRight: Radius.circular(20),
+                                    bottomLeft: Radius.circular(
+                                      20,
+                                    ), // 👈 bottom radius
+                                    bottomRight: Radius.circular(
+                                      20,
+                                    ), // 👈 bottom radius
+                                  ),
+                                ),
+                                builder: (context) {
+                                  return Padding(
+                                    padding: EdgeInsets.only(
+                                      bottom: 10.7.h,
+                                      left: 4.6.w,
+                                      right: 4.6.w,
+                                    ),
+                                    child: const TodayNutritionSheet(),
+                                  );
+                                },
+                              );
+                            },
+                            child: Text(
+                              "View Details",
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                height: 1,
+                                fontWeight: FontWeight.w400,
+                                color: Color.fromRGBO(255, 255, 255, 1),
+                              ),
                             ),
                           ),
                         ),
@@ -547,6 +651,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               ),
+              SizedBox(height: 3.5.h),
             ],
           ),
         ),
