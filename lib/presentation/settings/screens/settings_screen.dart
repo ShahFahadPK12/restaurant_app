@@ -146,7 +146,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       )
                     : null,
                 onTap: () {
-                  Get.toNamed("/profileSetting");
+                  Get.toNamed("/notification");
                 },
               ),
 
