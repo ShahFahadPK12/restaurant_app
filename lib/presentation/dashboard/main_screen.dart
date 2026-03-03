@@ -1,5 +1,5 @@
 
-import 'package:restaurant_app/presentation/food_preference/screens/food_preference.dart';
+import 'package:restaurant_app/presentation/food_preference/screens/FoodPreferenceScreen.dart';
 import 'package:restaurant_app/presentation/grocery/screen/grocery_screen.dart';
 import 'package:restaurant_app/presentation/home/screens/home_screen.dart';
 import 'package:restaurant_app/presentation/panttery/screens/panttery_screen.dart';

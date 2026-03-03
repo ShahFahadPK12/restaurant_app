@@ -10,7 +10,8 @@ import 'package:restaurant_app/presentation/auth/screens/sign_in_screen.dart';
 import 'package:restaurant_app/presentation/auth/screens/sign_up_screen.dart';
 import 'package:restaurant_app/presentation/change_password/screen/change_password_screen.dart';
 import 'package:restaurant_app/presentation/dashboard/main_screen.dart';
-import 'package:restaurant_app/presentation/food_preference/screens/food_preference.dart';
+import 'package:restaurant_app/presentation/food_preference/screens/FoodPreferenceScreen.dart';
+
 import 'package:restaurant_app/presentation/grocery/screen/grocery_screen.dart';
 import 'package:restaurant_app/presentation/home/screens/home_screen.dart';
 import 'package:restaurant_app/presentation/notifications/screens/notification_screend.dart';
