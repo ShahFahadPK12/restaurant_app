@@ -36,14 +36,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ),
 
-              const SizedBox(height: 3),
+              const SizedBox(height: 8),
 
               Text(
                 "Update your settings like notification, diet preference, profile edit etc.",
                 style: TextStyle(
                   fontSize: 16.sp,
                   color: Color.fromRGBO(146, 153, 163, 1),
-                  height: 1,
+                  height: 1.3,
                 ),
               ),
 
@@ -54,24 +54,32 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 imagePath: "assets/setting/profile_setting.png",
                 title: "Profile Information",
                 subtitle: "Change your information",
+                onTap: () {
+                  Get.toNamed("/profileSetting");
+                },
               ),
 
               _settingsTile(
                 imagePath: "assets/setting/dietery_preference.png",
                 title: "Dietary Preferences",
                 subtitle: "Adjust your diet preference",
+                onTap: () {},
               ),
 
               _settingsTile(
                 imagePath: "assets/setting/ai_recovery.png",
                 title: "Ai Recipe History",
                 subtitle: "See history to make better dishes",
+                onTap: () {},
               ),
 
               _settingsTile(
                 imagePath: "assets/setting/privacy.png",
                 title: "Privacy",
                 subtitle: "Terms & Conditions",
+                onTap: () {
+                  Get.toNamed("/privacy_poliocy");
+                },
               ),
 
               /// Fifth button (no divider after)
@@ -80,6 +88,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 title: "Language",
                 subtitle: "English",
                 showTrailing: false,
+                onTap: () {},
               ),
 
               SizedBox(height: 2.6.h),
@@ -104,6 +113,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     required String imagePath,
     required String title,
     required String subtitle,
+    required VoidCallback onTap,
     bool showTrailing = true,
   }) {
     return Row(
@@ -145,9 +155,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         color: Color.fromRGBO(112, 112, 112, 1),
                       )
                     : null,
-                onTap: () {
-                  Get.toNamed("/notification");
-                },
+                onTap: onTap,
               ),
 
               const Divider(height: 1, color: Color.fromRGBO(229, 233, 239, 1)),

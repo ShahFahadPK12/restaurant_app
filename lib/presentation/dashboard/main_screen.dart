@@ -1,4 +1,5 @@
-import 'package:restaurant_app/presentation/food-pref/screens/food-pref.dart';
+
+import 'package:restaurant_app/presentation/food_preference/screens/food_preference.dart';
 import 'package:restaurant_app/presentation/grocery/screen/grocery_screen.dart';
 import 'package:restaurant_app/presentation/home/screens/home_screen.dart';
 import 'package:restaurant_app/presentation/panttery/screens/panttery_screen.dart';
@@ -17,9 +18,9 @@ class _MainScreenState extends State<MainScreen> {
 
   final List<Widget> screens = [
     HomeScreen(),
-    PantteryScreen(),
-    GroceryScreen(),
-    FoodPrefScreen(),
+    PantryScreen(),
+    GroceryListScreen(),
+    FoodPreferenceScreen(),
     SettingsScreen(),
   ];
 
@@ -38,13 +39,11 @@ class _MainScreenState extends State<MainScreen> {
         decoration: BoxDecoration(
           color: const Color.fromARGB(255, 24, 24, 24),
 
-          // 👇 Bottom corners radius
           borderRadius: const BorderRadius.only(
             bottomLeft: Radius.circular(24),
             bottomRight: Radius.circular(24),
           ),
 
-          // 👇 Box Shadow
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.15),

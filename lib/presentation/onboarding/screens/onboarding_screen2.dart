@@ -4,7 +4,6 @@ import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:restaurant_app/presentation/onboarding/widgets/custom_widget_button_for_onboarding.dart';
 
-
 class OnboardingScreen2 extends StatefulWidget {
   const OnboardingScreen2({super.key});
 
@@ -100,7 +99,9 @@ class _OnboardingScreen2State extends State<OnboardingScreen2> {
                       text: "Answer Later",
                       textColor: Colors.white,
                       bgcolor: Color.fromRGBO(112, 112, 112, 1),
-                      onTap: () {},
+                      onTap: () {
+                        Get.offAllNamed("/main");
+                      },
                     ),
                   ],
                 ),

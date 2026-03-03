@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class PrivacyPolicyScreen extends StatefulWidget {
@@ -9,7 +11,6 @@ class PrivacyPolicyScreen extends StatefulWidget {
 }
 
 class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
-
   String selectedLanguage = "English";
 
   final List<String> languages = ["English", "French"];
@@ -17,30 +18,30 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 4.6.w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
               SizedBox(height: 2.h),
 
-              /// 🔹 Custom Header
               Row(
                 children: [
-                  IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
+                  GestureDetector(
+                    onTap: () {
+                      Get.back();
                     },
-                    icon: const Icon(
-                      Icons.arrow_back_ios,
-                      size: 18,
-                      color: Colors.black,
+                    behavior: HitTestBehavior.opaque,
+                    child: const Padding(
+                      padding: EdgeInsets.all(0),
+                      child: Icon(
+                        Icons.arrow_back_ios,
+                        size: 16,
+                        color: Color.fromRGBO(0, 0, 0, 1),
+                      ),
                     ),
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(),
                   ),
                   SizedBox(width: 3.w),
                   Text(
@@ -56,37 +57,59 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
 
               SizedBox(height: 3.h),
 
-              /// 🔹 Language Dropdown Button
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(25),
-                ),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton<String>(
-                    value: selectedLanguage,
-                    dropdownColor: Colors.black,
-                    icon: const Icon(Icons.keyboard_arrow_down, color: Colors.white),
-                    style: const TextStyle(color: Colors.white),
-                    items: languages.map((String language) {
-                      return DropdownMenuItem<String>(
-                        value: language,
-                        child: Text(language),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        selectedLanguage = value!;
-                      });
-                    },
+              PopupMenuButton<String>(
+                onSelected: (value) {
+                  setState(() {
+                    selectedLanguage = value;
+                  });
+                },
+                itemBuilder: (context) {
+                  return languages.map((language) {
+                    return PopupMenuItem<String>(
+                      value: language,
+                      child: Text(language),
+                    );
+                  }).toList();
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 3.7.w,
+                    vertical: 0.8.h,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.language, color: Colors.white, size: 18),
+
+                      SizedBox(width: 1.3.w),
+
+                      Text(
+                        selectedLanguage,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+
+                      SizedBox(width: 2.7.w),
+
+                      const Icon(
+                        Icons.keyboard_arrow_down,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                    ],
                   ),
                 ),
               ),
 
               SizedBox(height: 3.h),
 
-              /// 🔹 Privacy Content
               Expanded(
                 child: SingleChildScrollView(
                   child: Text(

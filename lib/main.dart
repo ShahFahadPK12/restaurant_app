@@ -10,11 +10,14 @@ import 'package:restaurant_app/presentation/auth/screens/sign_in_screen.dart';
 import 'package:restaurant_app/presentation/auth/screens/sign_up_screen.dart';
 import 'package:restaurant_app/presentation/change_password/screen/change_password_screen.dart';
 import 'package:restaurant_app/presentation/dashboard/main_screen.dart';
+import 'package:restaurant_app/presentation/food_preference/screens/food_preference.dart';
+import 'package:restaurant_app/presentation/grocery/screen/grocery_screen.dart';
 import 'package:restaurant_app/presentation/home/screens/home_screen.dart';
 import 'package:restaurant_app/presentation/notifications/screens/notification_screend.dart';
 import 'package:restaurant_app/presentation/onboarding/screens/onboarding_screen1.dart';
 import 'package:restaurant_app/presentation/onboarding/screens/onboarding_screen2.dart';
 import 'package:restaurant_app/presentation/onboarding/screens/onborading_screen3.dart';
+import 'package:restaurant_app/presentation/panttery/screens/panttery_screen.dart';
 import 'package:restaurant_app/presentation/privacy_policy/screens/privacy_policy.dart';
 
 import 'package:restaurant_app/presentation/profile_setting/screens/profile_setting.dart';
@@ -107,8 +110,14 @@ class MyApp extends StatelessWidget {
               name: "/changePassword",
               page: () => ChangePasswordScreen(),
             ),
-            GetPage(name: "/privacy_polocy", page: () => PrivacyPolicyScreen()),
+            GetPage(
+              name: "/privacy_poliocy",
+              page: () => PrivacyPolicyScreen(),
+            ),
             GetPage(name: "/notification", page: () => NotificationScreen()),
+            GetPage(name: "/pantery_screen", page: () => PantryScreen()),
+            GetPage(name: "/grocery_list", page: () => GroceryListScreen()),
+            GetPage(name: "/food_pref", page: () => FoodPreferenceScreen()),
           ],
 
           home: SplashScreen(),

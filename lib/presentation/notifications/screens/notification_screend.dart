@@ -7,17 +7,24 @@ class NotificationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: Color.fromRGBO(255, 255, 255, 1),
       body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 4.6.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 2.h),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 2.h),
 
-              /// 🔹 Custom Header
-              Row(
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 4.6.w, vertical: 1.6.h),
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: const BorderSide(
+                    color: Color.fromRGBO(239, 239, 239, 1),
+                    width: 1,
+                  ),
+                ),
+              ),
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
@@ -34,37 +41,35 @@ class NotificationScreen extends StatelessWidget {
                   ),
                 ],
               ),
+            ),
 
-              SizedBox(height: 2.h),
+            SizedBox(height: 2.h),
 
-              /// 🔹 Notification List
-              Expanded(
-                child: Column(
-                  children: [
-                    notificationTile(
-                      title: "Set alerts to remind you when to start cooking.",
-                      time: "Just now",
-                      isUnread: true,
-                    ),
+            Expanded(
+              child: Column(
+                children: [
+                  notificationTile(
+                    title: "Set alerts to remind you when to start cooking.",
+                    time: "Just now",
+                    isUnread: true,
+                  ),
 
-                    notificationTile(
-                      title:
-                          "Stay engaged with quick daily food & fitness tasks.",
-                      time: "2 hours ago",
-                      isUnread: false,
-                    ),
+                  notificationTile(
+                    title:
+                        "Stay engaged with quick daily food & fitness tasks.",
+                    time: "2 hours ago",
+                    isUnread: false,
+                  ),
 
-                    notificationTile(
-                      title:
-                          "Receive reminders to restock missing ingredients.",
-                      time: "3 days ago",
-                      isUnread: false,
-                    ),
-                  ],
-                ),
+                  notificationTile(
+                    title: "Receive reminders to restock missing ingredients.",
+                    time: "3 days ago",
+                    isUnread: false,
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -77,23 +82,23 @@ class NotificationScreen extends StatelessWidget {
     required bool isUnread,
   }) {
     return Container(
+      padding: EdgeInsets.symmetric(horizontal: 6.9.w, vertical: 1.6.h),
       decoration: BoxDecoration(
         border: Border(
-          top: const BorderSide(
-            color: Color.fromRGBO(255, 255, 255, 1),
-            width: 1,
-          ),
+          // top: const BorderSide(
+          //   color: Color.fromRGBO(239, 239, 239, 1),
+          //   width: 1,
+          // ),
           bottom: const BorderSide(
-            color: Color.fromRGBO(255, 255, 255, 1),
+            color: Color.fromRGBO(239, 239, 239, 1),
             width: 1,
           ),
         ),
       ),
-      padding: const EdgeInsets.symmetric(vertical: 14),
+      //padding: const EdgeInsets.symmetric(vertical: 14),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          /// 🔴 Dot
           Container(
             width: 8,
             height: 8,
