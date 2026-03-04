@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart ';
+import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -9,6 +10,7 @@ class SplashScreen3 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //backgroundColor: Colors.transparent,
       extendBodyBehindAppBar: true,
       body: SafeArea(
         child: Stack(
@@ -27,21 +29,33 @@ class SplashScreen3 extends StatelessWidget {
               left: 20,
               child: Row(
                 children: [
-                  Container(
-                    width: 31,
-                    height: 4,
-                    decoration: BoxDecoration(
-                      color: Color.fromRGBO(31, 31, 31, 1),
-                      borderRadius: BorderRadius.circular(25),
+                  GestureDetector(
+                    onTap: () {
+                      Get.toNamed("/splash1");
+                      print("first splash screen is clicking from screen 2");
+                    },
+                    child: Container(
+                      width: 31,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: Color.fromRGBO(31, 31, 31, 1),
+                        borderRadius: BorderRadius.circular(25),
+                      ),
                     ),
                   ),
                   SizedBox(width: 3),
-                  Container(
-                    width: 31,
-                    height: 4,
-                    decoration: BoxDecoration(
-                      color: Color.fromRGBO(31, 31, 31, 1),
-                      borderRadius: BorderRadius.circular(25),
+                  GestureDetector(
+                    onTap: () {
+                      Get.toNamed("/splash2");
+                      print("first splash screen is clicking from screen 2");
+                    },
+                    child: Container(
+                      width: 31,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: Color.fromRGBO(31, 31, 31, 1),
+                        borderRadius: BorderRadius.circular(25),
+                      ),
                     ),
                   ),
                   SizedBox(width: 3),

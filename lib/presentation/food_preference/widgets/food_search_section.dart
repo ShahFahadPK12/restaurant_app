@@ -105,7 +105,8 @@ class FoodSearchSection extends StatelessWidget {
               if (foods.length > 3)
                 GestureDetector(
                   onTap: () {
-                    showFoodPopup(context, foods, onRemove);
+                    
+                   showFoodPopup(context, foods, onRemove);
                   },
                   child: Padding(
                     padding: EdgeInsets.only(left: 2.w, top: 0.5.h),

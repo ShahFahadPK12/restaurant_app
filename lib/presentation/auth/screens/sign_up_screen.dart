@@ -7,7 +7,6 @@ import 'package:restaurant_app/presentation/auth/widgets/custom_button.dart';
 import 'package:restaurant_app/presentation/auth/widgets/custom_text_field.dart';
 import 'package:restaurant_app/presentation/auth/widgets/language_dropdown.dart';
 
-
 class SignUpScreen extends StatefulWidget {
   SignUpScreen({super.key});
 
@@ -240,6 +239,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
+                              print("Sign In clicked");
                               Get.toNamed("/login");
                             },
                         ),

@@ -11,39 +11,18 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //   List<String> images = [
-  //     "assets/splash_screens/splash_screen1_bg.jpg",
-  //     "assets/splash_screens/splash_screen2_bg.jpg",
-  //     "assets/splash_screens/splash_screen3_bg.jpg",
-  //     "assets/onboarding/onboarding_screen1.png",
-  //     "assets/onboarding/onboarding_screen2.png",
-  //     "assets/auth/welcome-auth.png",
-  //     "assets/auth/forgotPassword-image.png",
-  //   ];
-  //   for (var img in images) {
-  //     precacheImage(AssetImage(img), context);
-  //   }
-  // }
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      precacheImage(
-        AssetImage("assets/splash_screens/splash_screen1_bg.jpg"),
-        context,
-      );
-      precacheImage(
-        AssetImage("assets/splash_screens/splash_screen2_bg.jpg"),
-        context,
-      );
-      Get.offAllNamed("/splash1");
-    });
-    // didChangeDependencies();
-    // Future.delayed(const Duration(seconds: 2), () {
-    //   Get.offAllNamed("/splash1");
-    // });
+    _startLoading();
+  }
+
+  Future<void> _startLoading() async {
+    await Future.delayed(const Duration(seconds: 2));
+
+    await _preloadImages();
+
+    Get.offAllNamed("/splash1");
   }
 
   Future<void> _preloadImages() async {
@@ -61,7 +40,7 @@ class _SplashScreenState extends State<SplashScreen> {
       await precacheImage(AssetImage(img), context);
     }
 
-    Get.offAllNamed("/splash1");
+    //Get.offAllNamed("/splash1");
   }
 
   @override

@@ -9,6 +9,7 @@ class SplashScreen2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //backgroundColor: Colors.transparent,
       extendBodyBehindAppBar: true,
       body: SafeArea(
         child: Stack(
@@ -16,9 +17,11 @@ class SplashScreen2 extends StatelessWidget {
             SizedBox(
               height: double.infinity,
               width: double.infinity,
+
               child: Image.asset(
                 "assets/splash_screens/splash_screen2_bg.jpg",
                 fit: BoxFit.cover,
+                cacheWidth: (MediaQuery.of(context).size.width).toInt(),
               ),
             ),
             Positioned(

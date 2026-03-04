@@ -16,7 +16,7 @@ class SignInScreen extends StatelessWidget {
               height: double.infinity,
               width: double.infinity,
               child: Image.asset(
-                "assets/auth/welcome-auth.png",
+                "assets/auth/welcome-auth.jpg",
                 fit: BoxFit.cover,
               ),
             ),
@@ -153,7 +153,9 @@ class SignInScreen extends StatelessWidget {
                           ),
                         ),
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Get.toNamed("/login");
+                          },
                           child: Text(
                             "Sign In",
 
