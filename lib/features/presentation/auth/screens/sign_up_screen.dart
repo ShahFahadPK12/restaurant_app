@@ -1,8 +1,13 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:restaurant_app/features/data/auth/user_repository/user_repository.dart';
+import 'package:restaurant_app/features/domain/auth/auth_repositories/auth_repository.dart';
+import 'package:restaurant_app/features/presentation/auth/controllers/auth_controller.dart';
 import 'package:restaurant_app/features/presentation/auth/widgets/custom_button.dart';
 import 'package:restaurant_app/features/presentation/auth/widgets/custom_text_field.dart';
 import 'package:restaurant_app/features/presentation/auth/widgets/language_dropdown.dart';
@@ -17,6 +22,8 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
+  final authController = Get.put(AuthController(UserRepository()));
+
 
   final nameController = TextEditingController();
   final emailController = TextEditingController();
@@ -206,19 +213,42 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   textAlign: TextAlign.center,
                 ),
-
                 SizedBox(height: 1.7.h),
-                CustomButton(
-                  text: "Sign Up",
-                  onTap: () {
-                    if (_formKey.currentState!.validate()) {
-                      // Perform sign-up logic here
-                      print("Form is valid. Proceed with sign-up.");
-                    } else {
-                      print("Form is invalid. Please correct the errors.");
-                    }
-                  },
-                ),
+                Obx(() => CustomButton(
+      text: authController.isLoading.value
+          ? "Loading..."
+          : "Sign Up",
+      onTap: () {
+
+        if (_formKey.currentState!.validate()) {
+
+          authController.signUp(
+            fullName: nameController.text,
+            email: emailController.text,
+            password: passwordController.text,
+            language: selectedLanguage,
+          );
+
+        } else {
+
+          print("Form is invalid. Please correct the errors.");
+
+        }
+
+      },
+    ),
+)
+                // CustomButton(
+                //   text: "Sign Up",
+                //   onTap: () {
+                //     if (_formKey.currentState!.validate()) {
+                      
+                //       print("Form is valid. Proceed with sign-up.");
+                //     } else {
+                //       print("Form is invalid. Please correct the errors.");
+                //     }
+                //   },
+                // ),
                 SizedBox(height: 1.7.h),
                 Center(
                   child: RichText(
