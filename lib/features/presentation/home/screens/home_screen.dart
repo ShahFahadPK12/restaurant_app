@@ -483,21 +483,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                     ),
-                    // ListTile(
-                    //   leading: Icon(Icons.breakfast_dining),
-                    //   title: Text("Breakfast"),
-                    //   subtitle: Text("Completed - 430 cal"),
-                    // ),
-                    // ListTile(
-                    //   leading: Icon(Icons.lunch_dining),
-                    //   title: Text("Lunch"),
-                    //   subtitle: Text("Completed - 650 cal"),
-                    // ),
-                    // ListTile(
-                    //   leading: Icon(Icons.dinner_dining),
-                    //   title: Text("Dinner"),
-                    //   subtitle: Text("Upcoming"),
-                    // ),
+                 
                   ],
                 ),
               ),

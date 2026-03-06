@@ -9,7 +9,7 @@ import 'package:restaurant_app/features/presentation/auth/screens/login_screen.d
 import 'package:restaurant_app/features/presentation/auth/screens/sign_up_screen.dart';
 import 'package:restaurant_app/features/presentation/auth/screens/welcome_authScreen.dart';
 import 'package:restaurant_app/features/presentation/change_password/screen/change_password_screen.dart';
-import 'package:restaurant_app/features/presentation/dashboard/main_screen.dart';
+import 'package:restaurant_app/core/dashboard/main_screen.dart';
 import 'package:restaurant_app/features/presentation/food_preference/screens/FoodPreferenceScreen.dart';
 import 'package:restaurant_app/features/presentation/grocery/screen/grocery_screen.dart';
 import 'package:restaurant_app/features/presentation/home/screens/home_screen.dart';
@@ -21,8 +21,9 @@ import 'package:restaurant_app/features/presentation/panttery/screens/panttery_s
 import 'package:restaurant_app/features/presentation/privacy_policy/screens/privacy_policy.dart';
 import 'package:restaurant_app/features/presentation/profile_setting/screens/profile_setting.dart';
 import 'package:restaurant_app/features/presentation/settings/screens/settings_screen.dart';
-import 'package:restaurant_app/presentation/splash/screen/splash_screen.dart';
-import 'package:restaurant_app/presentation/splash/screen/splash_screen1.dart';
+import 'package:restaurant_app/features/presentation/splash/screen/splash_screen.dart';
+import 'package:restaurant_app/features/presentation/splash/screen/splash_screen1.dart';
+
 
 
 void main() {
