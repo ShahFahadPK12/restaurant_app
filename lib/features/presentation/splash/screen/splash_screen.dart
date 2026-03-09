@@ -1,7 +1,9 @@
 import "package:flutter/material.dart";
 import "package:get/get_core/src/get_main.dart";
 import "package:get/get_navigation/src/extension_navigation.dart";
-import "package:get/get_navigation/src/routes/transitions_type.dart";
+import "package:restaurant_app/features/data/auth/user_data_source/remote/auth_remote_data_source.dart";
+import "package:restaurant_app/features/data/auth/user_repository/user_repository.dart";
+import "package:restaurant_app/features/domain/auth/auth_repositories/auth_repository.dart";
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -11,12 +13,25 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  final AuthRepository authRepository = UserRepository(AuthRemoteDataSource());
   @override
   void initState() {
     super.initState();
+    checkLogin();
   }
 
   bool _loaded = false;
+
+  Future<void> checkLogin() async {
+    final isLogged = await authRepository.isLoggedIn();
+
+    if (isLogged) {
+      Get.offAllNamed("/home");
+    } else {
+      Get.offAllNamed("/login");
+    }
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -32,16 +47,7 @@ class _SplashScreenState extends State<SplashScreen> {
       const AssetImage("assets/splash_screens/splash_screen1_bg.jpg"),
       context,
     );
-
-    await precacheImage(
-      const AssetImage("assets/splash_screens/splash_screen2_bg.jpg"),
-      context,
-    );
-
-    await precacheImage(
-      const AssetImage("assets/splash_screens/splash_screen3_bg.jpg"),
-      context,
-    );
+    await Future.delayed(const Duration(seconds: 2));
 
     Get.toNamed("/splash1");
   }

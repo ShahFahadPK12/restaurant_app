@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+
+import 'package:restaurant_app/features/data/auth/user_data_source/remote/auth_remote_data_source.dart';
+import 'package:restaurant_app/features/data/auth/user_repository/user_repository.dart';
+import 'package:restaurant_app/features/presentation/auth/controllers/auth_controller.dart';
 
 class ProfileSettingsScreen extends StatefulWidget {
   const ProfileSettingsScreen({Key? key}) : super(key: key);
@@ -13,6 +18,9 @@ class ProfileSettingsScreen extends StatefulWidget {
 }
 
 class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
+  final authController = Get.put(
+    AuthController(UserRepository(AuthRemoteDataSource())),
+  );
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
@@ -402,10 +410,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
             ),
             TextButton(
               onPressed: () {
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Logged out successfully')),
-                );
+                authController.logout();
               },
               style: TextButton.styleFrom(foregroundColor: Colors.red),
               child: const Text('Logout'),

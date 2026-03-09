@@ -5,13 +5,13 @@ import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:restaurant_app/features/data/auth/user_data_source/remote/auth_remote_data_source.dart';
 import 'package:restaurant_app/features/data/auth/user_repository/user_repository.dart';
 import 'package:restaurant_app/features/domain/auth/auth_repositories/auth_repository.dart';
 import 'package:restaurant_app/features/presentation/auth/controllers/auth_controller.dart';
 import 'package:restaurant_app/features/presentation/auth/widgets/custom_button.dart';
 import 'package:restaurant_app/features/presentation/auth/widgets/custom_text_field.dart';
 import 'package:restaurant_app/features/presentation/auth/widgets/language_dropdown.dart';
-
 
 class SignUpScreen extends StatefulWidget {
   SignUpScreen({super.key});
@@ -22,15 +22,16 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
-  final authController = Get.put(AuthController(UserRepository()));
-
+  final authController = Get.put(
+    AuthController(UserRepository(AuthRemoteDataSource())),
+  );
 
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
 
-  String? selectedLanguage = "English";
+  String? selectedLanguage = "english";
 
   @override
   void dispose() {
@@ -137,9 +138,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 SizedBox(height: 12),
                 LanguageDropdown(
                   selectedValue: selectedLanguage,
-                  languages: const ["English", "French", "Spanish"],
+                  languages: const ["english", "french", "frenco"],
                   onChanged: (value) {
-                    selectedLanguage = value;
+                    setState(() {
+                      selectedLanguage = value;
+                    });
                   },
                 ),
                 SizedBox(height: 1.7.h),
@@ -214,35 +217,36 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: 1.7.h),
-                Obx(() => CustomButton(
-      text: authController.isLoading.value
-          ? "Loading..."
-          : "Sign Up",
-      onTap: () {
-
-        if (_formKey.currentState!.validate()) {
-
-          authController.signUp(
-            fullName: nameController.text,
-            email: emailController.text,
-            password: passwordController.text,
-            language: selectedLanguage,
-          );
-
-        } else {
-
-          print("Form is invalid. Please correct the errors.");
-
-        }
-
-      },
-    ),
-)
+                Obx(
+                  () => authController.isLoading.value
+                      ? Center(
+                          child: CircularProgressIndicator(
+                            color: Color.fromRGBO(31, 31, 31, 1),
+                          ),
+                        )
+                      : CustomButton(
+                          text: "Sign Up",
+                          onTap: () {
+                            if (_formKey.currentState!.validate()) {
+                              authController.signUp(
+                                fullName: nameController.text,
+                                email: emailController.text,
+                                password: passwordController.text,
+                                language: selectedLanguage!,
+                              );
+                            } else {
+                              print(
+                                "Form is invalid. Please correct the errors.",
+                              );
+                            }
+                          },
+                        ),
+                ),
                 // CustomButton(
                 //   text: "Sign Up",
                 //   onTap: () {
                 //     if (_formKey.currentState!.validate()) {
-                      
+
                 //       print("Form is valid. Proceed with sign-up.");
                 //     } else {
                 //       print("Form is invalid. Please correct the errors.");

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:restaurant_app/features/presentation/auth/screens/forgot_password_screen.dart';
 import 'package:restaurant_app/features/presentation/auth/screens/forgot_password_screen1.dart';
@@ -24,10 +25,9 @@ import 'package:restaurant_app/features/presentation/settings/screens/settings_s
 import 'package:restaurant_app/features/presentation/splash/screen/splash_screen.dart';
 import 'package:restaurant_app/features/presentation/splash/screen/splash_screen1.dart';
 
-
-
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await GetStorage.init();
 
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(

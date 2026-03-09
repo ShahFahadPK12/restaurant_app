@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:restaurant_app/features/data/auth/user_data_source/remote/auth_remote_data_source.dart';
+import 'package:restaurant_app/features/data/auth/user_repository/user_repository.dart';
+import 'package:restaurant_app/features/presentation/auth/controllers/auth_controller.dart';
 import 'package:restaurant_app/features/presentation/auth/widgets/custom_button.dart';
 import 'package:restaurant_app/features/presentation/auth/widgets/custom_text_field.dart';
-
-
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -17,6 +20,10 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
+  final authController = Get.put(
+    AuthController(UserRepository(AuthRemoteDataSource())),
+  );
 
   @override
   void dispose() {
@@ -103,15 +110,23 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                   ),
                   SizedBox(height: 7.7.h),
-                  CustomButton(
-                    text: "Login",
-                    onTap: () {
-                      // if (_formKey.currentState!.validate()) {
+                  Obx(
+                    () => authController.isLoading.value
+                        ? Center(child: CircularProgressIndicator())
+                        : CustomButton(
+                            text: "Login",
+                            onTap: () {
+                              if (_formKey.currentState!.validate()) {
+                                authController.login(
+                                  email: emailController.text,
+                                  password: passwordController.text,
+                                );
+                               
 
-                      //   return null;
-                      // }
-                      Get.toNamed("/onboardingScreen1");
-                    },
+                                return null;
+                              }
+                            },
+                          ),
                   ),
 
                   SizedBox(height: 4.6.h),
