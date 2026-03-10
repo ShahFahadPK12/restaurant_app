@@ -71,5 +71,32 @@ class AuthRemoteDataSource {
   return jsonDecode(response.body);
 }
 
+Future sendOtp(String email) async{
+  final response = await http.post(Uri.parse("$baseUrl/send-otp"), 
+  headers: {
+    "Content-type": "application/json"
+  }, 
+  body:jsonEncode(
+    {
+      "email":email,
+    }
+  ));
+
+  return jsonDecode(response.body);
+}
+
+Future verifyOtp(String email, String otp)async{
+  final response = await http.post(Uri.parse("$baseUrl/verfiy-otp"), 
+  headers: {
+    "Content-Type":"application/json"
+  }, 
+  body:jsonEncode({
+    "email":email,
+    "otp":otp,
+    }));
+
+    return jsonDecode(response.body);
+}
+
  
 }

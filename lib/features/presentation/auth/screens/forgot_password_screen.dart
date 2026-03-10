@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:restaurant_app/features/data/auth/user_data_source/remote/auth_remote_data_source.dart';
+import 'package:restaurant_app/features/data/auth/user_repository/user_repository.dart';
+import 'package:restaurant_app/features/presentation/auth/controllers/auth_controller.dart';
 import 'package:restaurant_app/features/presentation/auth/widgets/custom_text_field.dart';
-
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -13,6 +17,9 @@ class ForgotPasswordScreen extends StatefulWidget {
 }
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
+  final authController = Get.put(
+    AuthController(UserRepository(AuthRemoteDataSource())),
+  );
   TextEditingController emailController = TextEditingController();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
@@ -100,7 +107,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                             ),
 
                             SizedBox(height: 46.5.h),
-                              Text(
+                            Text(
                               "Forget Password",
                               style: TextStyle(
                                 fontSize: 20.sp,
@@ -142,48 +149,61 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      if (_formKey.currentState!.validate()) {
-                                        Get.toNamed("/forgotPassword1");
-                                      }
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Color.fromRGBO(
-                                        31,
-                                        31,
-                                        31,
-                                        1,
-                                      ),
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 24,
-                                        vertical: 10,
-                                      ),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(26),
-                                      ),
-                                    ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        Text(
-                                          "Next",
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 22,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                        SizedBox(width: 10),
+                                  Obx(
+                                    () => authController.isLoading.value
+                                        ? Center(
+                                            child: CircularProgressIndicator(),
+                                          )
+                                        : ElevatedButton(
+                                            onPressed: () {
+                                              if (_formKey.currentState!
+                                                  .validate()) {
+                                                authController.sendOtp(
+                                                  emailController.text,
+                                                );
+                                                
+                                              }
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Color.fromRGBO(
+                                                31,
+                                                31,
+                                                31,
+                                                1,
+                                              ),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    horizontal: 24,
+                                                    vertical: 10,
+                                                  ),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(26),
+                                              ),
+                                            ),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                Text(
+                                                  "Next",
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 22,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 10),
 
-                                        Image.asset(
-                                          "assets/splash_screens/arrows.png",
-                                          height: 10,
-                                          width: 10,
-                                        ),
-                                      ],
-                                    ),
+                                                Image.asset(
+                                                  "assets/splash_screens/arrows.png",
+                                                  height: 10,
+                                                  width: 10,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
                                   ),
                                 ],
                               ),

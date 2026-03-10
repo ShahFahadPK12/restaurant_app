@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:restaurant_app/features/data/auth/user_data_source/remote/auth_remote_data_source.dart';
+import 'package:restaurant_app/features/data/auth/user_repository/user_repository.dart';
+import 'package:restaurant_app/features/presentation/auth/controllers/auth_controller.dart';
 
 class ForgotPasswordScreen1 extends StatefulWidget {
   const ForgotPasswordScreen1({super.key});
@@ -18,6 +23,10 @@ class _ForgotPasswordScreen1State extends State<ForgotPasswordScreen1> {
   TextEditingController c5 = TextEditingController();
   TextEditingController c6 = TextEditingController();
 
+  final authController = Get.put(
+    AuthController(UserRepository(AuthRemoteDataSource())),
+  );
+
   GlobalKey<FormState> _formKey = GlobalKey();
 
   @override
@@ -33,6 +42,7 @@ class _ForgotPasswordScreen1State extends State<ForgotPasswordScreen1> {
 
   @override
   Widget build(BuildContext context) {
+    final email = Get.arguments;
     return Scaffold(
       backgroundColor: Color.fromRGBO(235, 235, 235, 1),
       body: SafeArea(
@@ -110,12 +120,24 @@ class _ForgotPasswordScreen1State extends State<ForgotPasswordScreen1> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Text(
-                        "Resend",
-                        style: TextStyle(
-                          fontSize: 15.sp,
-                          fontWeight: FontWeight.w400,
-                          color: Color.fromRGBO(112, 112, 112, 1),
+                      GestureDetector(
+                        onTap: () {
+                          final email = Get.arguments;
+                          authController.sendOtp(email);
+                          Get.snackbar(
+                            "OTP Sent",
+                            "A new OTP has been sent to your email",
+                            backgroundColor: Color.fromRGBO(31, 31, 31, 1),
+                            colorText: Colors.white,
+                          );
+                        },
+                        child: Text(
+                          "Resend",
+                          style: TextStyle(
+                            fontSize: 15.sp,
+                            fontWeight: FontWeight.w400,
+                            color: Color.fromRGBO(112, 112, 112, 1),
+                          ),
                         ),
                       ),
                     ],
@@ -127,57 +149,70 @@ class _ForgotPasswordScreen1State extends State<ForgotPasswordScreen1> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            if (c1.text.isEmpty ||
-                                c2.text.isEmpty ||
-                                c3.text.isEmpty ||
-                                c4.text.isEmpty ||
-                                c5.text.isEmpty ||
-                                c6.text.isEmpty) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text("Please enter complete OTP"),
-                                ),
-                              );
-                            } else {
-                              Get.toNamed("/forgotPassword2");
-                              print(
-                                "ForgotPassword Screen 1 moving to forgotPassword Screen2",
-                              );
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color.fromRGBO(96, 96, 96, 1),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 24,
-                              vertical: 10,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(26),
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Text(
-                                "Next",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                              SizedBox(width: 10),
+                        Obx(
+                          () => authController.isLoading.value
+                              ? Center(child: CircularProgressIndicator())
+                              : ElevatedButton(
+                                  onPressed: () {
+                                    if (c1.text.isEmpty ||
+                                        c2.text.isEmpty ||
+                                        c3.text.isEmpty ||
+                                        c4.text.isEmpty ||
+                                        c5.text.isEmpty ||
+                                        c6.text.isEmpty) {
+                                      Get.snackbar(
+                                        "Error",
+                                        "Please Enter complete OTP",
+                                      );
+                                      return;
+                                    }
+                                    String otp =
+                                        c1.text +
+                                        c2.text +
+                                        c3.text +
+                                        c4.text +
+                                        c5.text +
+                                        c6.text;
 
-                              Image.asset(
-                                "assets/splash_screens/arrows.png",
-                                height: 10,
-                                width: 10,
-                              ),
-                            ],
-                          ),
+                                    authController.verifyOtp(email, otp);
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Color.fromRGBO(
+                                      96,
+                                      96,
+                                      96,
+                                      1,
+                                    ),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 24,
+                                      vertical: 10,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(26),
+                                    ),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        "Next",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                      SizedBox(width: 10),
+
+                                      Image.asset(
+                                        "assets/splash_screens/arrows.png",
+                                        height: 10,
+                                        width: 10,
+                                      ),
+                                    ],
+                                  ),
+                                ),
                         ),
                       ],
                     ),

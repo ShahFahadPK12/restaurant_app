@@ -62,4 +62,14 @@ class UserRepository implements AuthRepository {
     box.remove("userId");
     box.remove("email");
   }
+
+  @override
+  Future sendOtp(String email){
+    return remoteDataSource.sendOtp(email);
+  }
+
+  @override
+  Future verifyOtp(String email, String otp){
+    return remoteDataSource.verifyOtp(email, otp);
+  }
 }

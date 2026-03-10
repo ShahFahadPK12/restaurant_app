@@ -24,18 +24,19 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> checkLogin() async {
     final isLogged = await authRepository.isLoggedIn();
+    await Future.delayed(const Duration(seconds: 2));
 
     if (isLogged) {
-      Get.offAllNamed("/home");
+      Get.offAllNamed("/main");
     } else {
-      Get.offAllNamed("/login");
+      Get.offAllNamed("/splash1");
     }
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    preloadImages();
+    //preloadImages();
     if (!_loaded) {
       _loaded = true;
       preloadImages();
@@ -47,9 +48,6 @@ class _SplashScreenState extends State<SplashScreen> {
       const AssetImage("assets/splash_screens/splash_screen1_bg.jpg"),
       context,
     );
-    await Future.delayed(const Duration(seconds: 2));
-
-    Get.toNamed("/splash1");
   }
 
   @override

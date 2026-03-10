@@ -24,4 +24,9 @@ abstract class AuthRepository {
 Future<bool> isLoggedIn();
 
 Future logout();
+
+Future sendOtp(String email);
+
+Future verifyOtp(String email, String otp);
+
 }

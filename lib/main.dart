@@ -104,12 +104,9 @@ class _MyAppState extends State<MyApp> {
               name: "/forgotPassword",
               page: () => ForgotPasswordScreen(),
             ),
+            GetPage(name: "/otpScreen", page: () => ForgotPasswordScreen1()),
             GetPage(
-              name: "/forgotPassword1",
-              page: () => ForgotPasswordScreen1(),
-            ),
-            GetPage(
-              name: "/forgotPassword2",
+              name: "/resetPassword",
               page: () => ForgotPasswordScreen2(),
             ),
 

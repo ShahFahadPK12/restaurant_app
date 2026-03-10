@@ -115,6 +115,20 @@ class AuthController extends GetxController {
     }
   }
 
+  Future sendOtp(String email) async{
+    final result=await authRepository.sendOtp(email);
+    if(result["success"]==true){
+      Get.toNamed("/otpScreen", arguments:email);
+    }
+  }
+
+  Future verifyOtp(String email, String otp) async{
+    final result = await authRepository.verifyOtp(email, otp);
+    if(result["success"]==true){
+      Get.toNamed("/resetPassword", arguments: email);
+    }
+  }
+
   //   Future<void> updateUser({
   //   required int userId,
   //   required String token,
