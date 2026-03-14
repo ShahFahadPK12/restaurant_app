@@ -1,26 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:restaurant_app/presentation/auth/screens/forgot_password_screen.dart';
-import 'package:restaurant_app/presentation/auth/screens/forgot_password_screen1.dart';
-import 'package:restaurant_app/presentation/auth/screens/forgot_password_screen2.dart';
-import 'package:restaurant_app/presentation/auth/screens/login_screen.dart';
-import 'package:restaurant_app/presentation/auth/screens/sign_in_screen.dart';
-import 'package:restaurant_app/presentation/auth/screens/sign_up_screen.dart';
-import 'package:restaurant_app/presentation/dashboard/main_screen.dart';
-import 'package:restaurant_app/presentation/home/screens/home_screen.dart';
-import 'package:restaurant_app/presentation/onboarding/screens/onboarding_screen1.dart';
-import 'package:restaurant_app/presentation/onboarding/screens/onboarding_screen2.dart';
-import 'package:restaurant_app/presentation/onboarding/screens/onborading_screen3.dart';
-import 'package:restaurant_app/presentation/settings/screens/settings_screen.dart';
-import 'package:restaurant_app/presentation/splash/screen/splash_screen.dart';
-import 'package:restaurant_app/presentation/splash/screen/splash_screen1.dart';
-import 'package:restaurant_app/presentation/splash/screen/splash_screen2.dart';
-import 'package:restaurant_app/presentation/splash/screen/splash_screen3.dart';
+import 'package:restaurant_app/features/presentation/auth/screens/forgot_password_screen.dart';
+import 'package:restaurant_app/features/presentation/auth/screens/forgot_password_screen1.dart';
+import 'package:restaurant_app/features/presentation/auth/screens/forgot_password_screen2.dart';
+import 'package:restaurant_app/features/presentation/auth/screens/login_screen.dart';
+import 'package:restaurant_app/features/presentation/auth/screens/sign_up_screen.dart';
+import 'package:restaurant_app/features/presentation/auth/screens/welcome_authScreen.dart';
+import 'package:restaurant_app/features/presentation/change_password/screen/change_password_screen.dart';
+import 'package:restaurant_app/core/dashboard/main_screen.dart';
+import 'package:restaurant_app/features/presentation/food_preference/screens/FoodPreferenceScreen.dart';
+import 'package:restaurant_app/features/presentation/grocery/screen/grocery_screen.dart';
+import 'package:restaurant_app/features/presentation/home/screens/home_screen.dart';
+import 'package:restaurant_app/features/presentation/notifications/screens/notification_screend.dart';
+import 'package:restaurant_app/features/presentation/onboarding/screens/onboarding_screen1.dart';
+import 'package:restaurant_app/features/presentation/onboarding/screens/onboarding_screen2.dart';
+import 'package:restaurant_app/features/presentation/onboarding/screens/onborading_screen3.dart';
+import 'package:restaurant_app/features/presentation/panttery/screens/panttery_screen.dart';
+import 'package:restaurant_app/features/presentation/privacy_policy/screens/privacy_policy.dart';
+import 'package:restaurant_app/features/presentation/profile_setting/screens/profile_setting.dart';
+import 'package:restaurant_app/features/presentation/settings/screens/settings_screen.dart';
+import 'package:restaurant_app/features/presentation/splash/screen/splash_screen.dart';
+import 'package:restaurant_app/features/presentation/splash/screen/splash_screen1.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await GetStorage.init();
 
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(
@@ -31,10 +38,41 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool _isPreloaded = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (!_isPreloaded) {
+      preloadImages(context);
+      _isPreloaded = true;
+    }
+  }
+
+  Future preloadImages(BuildContext context) async {
+    await precacheImage(
+      const AssetImage("assets/splash_screens/splash_screen1_bg.jpg"),
+      context,
+    );
+    await precacheImage(
+      const AssetImage("assets/auth/welcome-auth.jpg"),
+      context,
+    );
+    await precacheImage(
+      const AssetImage("assets/auth/forgotPassword-image.png"),
+      context,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return ResponsiveSizer(
@@ -59,21 +97,16 @@ class MyApp extends StatelessWidget {
           getPages: [
             GetPage(name: "/", page: () => SplashScreen()),
             GetPage(name: "/splash1", page: () => SplashScreen1()),
-            GetPage(name: "/splash2", page: () => SplashScreen2()),
-            GetPage(name: "/splash3", page: () => SplashScreen3()),
-            GetPage(name: "/signIn", page: () => SignInScreen()),
+            GetPage(name: "/welcome_auth", page: () => WelcomeAuthScreen()),
             GetPage(name: "/signUp", page: () => SignUpScreen()),
             GetPage(name: "/login", page: () => LoginScreen()),
             GetPage(
               name: "/forgotPassword",
               page: () => ForgotPasswordScreen(),
             ),
+            GetPage(name: "/otpScreen", page: () => ForgotPasswordScreen1()),
             GetPage(
-              name: "/forgotPassword1",
-              page: () => ForgotPasswordScreen1(),
-            ),
-            GetPage(
-              name: "/forgotPassword2",
+              name: "/resetPassword",
               page: () => ForgotPasswordScreen2(),
             ),
 
@@ -94,6 +127,22 @@ class MyApp extends StatelessWidget {
             GetPage(name: "/setting", page: () => SettingsScreen()),
             GetPage(name: "/home", page: () => HomeScreen()),
             GetPage(name: "/main", page: () => MainScreen()),
+            GetPage(
+              name: "/profileSetting",
+              page: () => ProfileSettingsScreen(),
+            ),
+            GetPage(
+              name: "/changePassword",
+              page: () => ChangePasswordScreen(),
+            ),
+            GetPage(
+              name: "/privacy_poliocy",
+              page: () => PrivacyPolicyScreen(),
+            ),
+            GetPage(name: "/notification", page: () => NotificationScreen()),
+            GetPage(name: "/pantery_screen", page: () => PantryScreen()),
+            GetPage(name: "/grocery_list", page: () => GroceryListScreen()),
+            GetPage(name: "/food_pref", page: () => FoodPreferenceScreen()),
           ],
 
           home: SplashScreen(),
