@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:restaurant_app/features/presentation/onboarding/widgets/OnboardingScreen10.dart';
 import 'package:restaurant_app/features/presentation/onboarding/widgets/OnboardingScreen11.dart';
@@ -24,24 +23,63 @@ import 'package:restaurant_app/features/presentation/onboarding/widgets/onboardi
 import 'package:restaurant_app/features/presentation/onboarding/widgets/onboardingScreen21.dart';
 import 'package:restaurant_app/features/presentation/onboarding/widgets/onboardingScreen22.dart';
 import 'package:restaurant_app/features/presentation/onboarding/widgets/onboardingScreen23.dart';
-
+import 'package:restaurant_app/features/presentation/onboarding/controllers/onboarding_progress_controller.dart';
+import 'package:restaurant_app/features/presentation/onboarding/controllers/onboarding_validation_controller.dart';
+import 'package:restaurant_app/features/presentation/onboarding/di/onboarding_di.dart';
 
 class OnboradingScreen3 extends StatefulWidget {
-  const OnboradingScreen3({super.key});
+  const OnboradingScreen3({super.key, this.initialStep});
+
+  final int? initialStep;
 
   @override
   State<OnboradingScreen3> createState() => _OnboradingScreen3State();
 }
 
 class _OnboradingScreen3State extends State<OnboradingScreen3> {
+  static const int totalSteps = 20;
   int currentStep = 0;
-  final int totalSteps = 19;
+  late final OnboardingProgressController _progressController;
+  late final OnboardingValidationController _validationController;
+
+  @override
+  void initState() {
+    super.initState();
+    _progressController = provideOnboardingProgressController(
+      totalSteps: totalSteps,
+    );
+    _progressController.loadProgress();
+    // Create or reuse validation controller (shared across onboarding screens).
+    if (Get.isRegistered<OnboardingValidationController>()) {
+      _validationController = Get.find<OnboardingValidationController>();
+    } else {
+      _validationController = Get.put(
+        OnboardingValidationController(),
+        permanent: true,
+      );
+    }
+    int? requestedStep = widget.initialStep;
+
+    if (requestedStep == null) {
+      final args = Get.arguments;
+      if (args is Map && args["initialStep"] is int) {
+        requestedStep = args["initialStep"] as int;
+      }
+    }
+
+    if (requestedStep != null &&
+        requestedStep >= 0 &&
+        requestedStep < totalSteps) {
+      currentStep = requestedStep;
+    }
+  }
 
   void nextStep() {
     if (currentStep < totalSteps - 1) {
       setState(() {
         currentStep++;
       });
+      _progressController.saveCompletedSteps(currentStep);
     } else {
       // Onboarding complete
       print("Onboarding Finished");
@@ -65,6 +103,11 @@ class _OnboradingScreen3State extends State<OnboradingScreen3> {
         return const CompletionBottomSheet();
       },
     );
+  }
+
+  Future<void> skipOnboarding() async {
+    await _progressController.saveSkipStep(currentStep);
+    Get.offAllNamed("/main");
   }
 
   Widget buildStepContent() {
@@ -175,13 +218,16 @@ class _OnboradingScreen3State extends State<OnboradingScreen3> {
                   ),
 
                   SizedBox(width: 6.w),
-                  Text(
-                    "Skip",
-                    style: TextStyle(
-                      fontSize: 22.sp,
-                      fontWeight: FontWeight.w400,
-                      height: 1,
-                      color: Color.fromRGBO(10, 6, 21, 1),
+                  GestureDetector(
+                    onTap: () async => skipOnboarding(),
+                    child: Text(
+                      "Skip",
+                      style: TextStyle(
+                        fontSize: 22.sp,
+                        fontWeight: FontWeight.w400,
+                        height: 1,
+                        color: Color.fromRGBO(10, 6, 21, 1),
+                      ),
                     ),
                   ),
                 ],
@@ -194,7 +240,18 @@ class _OnboradingScreen3State extends State<OnboradingScreen3> {
               CustomBottomButtonForOnboarding(
                 text: "Next",
                 onTap: () {
+                  final error = _validationController.validateStep(currentStep);
+                  if (error != null) {
+                    Get.snackbar(
+                      "Validation",
+                      error,
+                      backgroundColor: const Color.fromRGBO(31, 31, 31, 0.8),
+                      colorText: Colors.white,
+                    );
+                    return;
+                  }
                   if (currentStep == totalSteps - 1) {
+                    _progressController.saveCompletedSteps(totalSteps);
                     showCompletionBottomSheet(context);
                   } else {
                     nextStep();

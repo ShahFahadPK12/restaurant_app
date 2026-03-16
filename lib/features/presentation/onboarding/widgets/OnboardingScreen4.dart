@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:restaurant_app/features/presentation/onboarding/controllers/onboarding_validation_controller.dart';
 
 class OnboardingScreen4 extends StatefulWidget {
   const OnboardingScreen4({super.key});
@@ -10,6 +12,9 @@ class OnboardingScreen4 extends StatefulWidget {
 
 class _OnboardingScreen4State extends State<OnboardingScreen4> {
   String? selectedGender;
+  // Shared validation controller (created in OnboradingScreen3).
+  final OnboardingValidationController _validationController =
+      Get.find<OnboardingValidationController>();
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +49,8 @@ class _OnboardingScreen4State extends State<OnboardingScreen4> {
                 setState(() {
                   selectedGender = "Male";
                 });
+                // Save selection for validation.
+                _validationController.gender.value = "Male";
               },
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 7.9.w, vertical: 2.h),
@@ -82,6 +89,8 @@ class _OnboardingScreen4State extends State<OnboardingScreen4> {
                 setState(() {
                   selectedGender = "Female";
                 });
+                // Save selection for validation.
+                _validationController.gender.value = "Female";
               },
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 7.9.w, vertical: 2.h),

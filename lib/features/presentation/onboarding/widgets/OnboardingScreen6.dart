@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:restaurant_app/features/presentation/onboarding/controllers/onboarding_validation_controller.dart';
 
 class OnboardingScreen6 extends StatefulWidget {
   const OnboardingScreen6({super.key});
@@ -11,11 +13,16 @@ class OnboardingScreen6 extends StatefulWidget {
 
 class _OnboardingScreen6State extends State<OnboardingScreen6> {
   TextEditingController heightController = TextEditingController();
+  // Shared validation controller (created in OnboradingScreen3).
+  final OnboardingValidationController _validationController =
+      Get.find<OnboardingValidationController>();
 
   @override
   void initState() {
     super.initState();
     heightController.text = height.toString();
+    // Set initial default for validation.
+    _validationController.height.value = height;
   }
 
   String selectedUnit = "Centimetre";
@@ -101,6 +108,8 @@ class _OnboardingScreen6State extends State<OnboardingScreen6> {
                             setState(() {
                               height = int.tryParse(value) ?? 0;
                             });
+                            // Save value for validation.
+                            _validationController.height.value = height;
                           },
                         ),
                       ),

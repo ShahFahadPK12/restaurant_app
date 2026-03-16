@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:restaurant_app/features/presentation/home/widgets/nutritions_box.dart';
 import 'package:restaurant_app/features/presentation/home/widgets/today_nutrition_sheet.dart';
+import 'package:restaurant_app/features/presentation/onboarding/controllers/onboarding_progress_controller.dart';
+import 'package:restaurant_app/features/presentation/onboarding/di/onboarding_di.dart';
+import 'package:restaurant_app/features/presentation/onboarding/screens/onborading_screen3.dart';
 import 'package:restaurant_app/features/presentation/settings/screens/settings_screen.dart';
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -12,11 +16,29 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  static const int _totalOnboardingSteps = 20;
+
   String selectedDay = "Today";
   int expandedIndex = -1;
   int currentIndex = 0;
   DateTime? selectedDate;
   final TextEditingController _controller = TextEditingController();
+  late final OnboardingProgressController _progressController;
+
+  @override
+  void initState() {
+    super.initState();
+    _progressController = provideOnboardingProgressController(
+      totalSteps: _totalOnboardingSteps,
+    );
+    _progressController.loadProgress();
+  }
+
+  void _handleCompleteProfileTap() {
+    final int initialStep = _progressController.firstSkippedStep.value ?? 0;
+    final int safeStep = initialStep.clamp(0, _totalOnboardingSteps - 1);
+    Get.to(() => OnboradingScreen3(initialStep: safeStep));
+  }
 
   Future<void> _pickDate() async {
     DateTime now = DateTime.now();
@@ -202,90 +224,99 @@ class _HomeScreenState extends State<HomeScreen> {
 
               SizedBox(height: 3.1.h),
 
-              Container(
-                padding: EdgeInsets.only(
-                  top: 1.8.h,
-                  bottom: 2.2.h,
-                  left: 1.2.h,
-                  right: 1.2.h,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Complete your profile",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15.sp,
-                            fontWeight: FontWeight.w500,
-                            height: 1.25,
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 3,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(16),
-                          ),
+              Obx(() {
+                final int percent = _progressController.percent.value;
+                final double progress = _progressController.progress.value;
+                final int remaining = _progressController.remaining.value;
 
-                          child: Text(
-                            "70% Complete",
-                            style: TextStyle(
-                              color: Color.fromRGBO(31, 31, 31, 1),
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w400,
-                              height: 1,
-                            ),
-                          ),
-                        ),
-                      ],
+                return GestureDetector(
+                  onTap: _handleCompleteProfileTap,
+                  child: Container(
+                    padding: EdgeInsets.only(
+                      top: 1.8.h,
+                      bottom: 2.2.h,
+                      left: 1.2.h,
+                      right: 1.2.h,
                     ),
-
-                    SizedBox(height: 1.h),
-                    LinearProgressIndicator(
-                      value: 0.7,
-                      color: Color.fromRGBO(112, 112, 112, 1),
-                      backgroundColor: Color.fromRGBO(255, 255, 255, 1),
-                      minHeight: 8,
+                    decoration: BoxDecoration(
+                      color: Colors.black,
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    SizedBox(height: 1.8.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          "Complete Profile",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14.sp,
-                            height: 1.2,
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Complete your profile",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 15.sp,
+                                fontWeight: FontWeight.w500,
+                                height: 1.25,
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 3,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+
+                              child: Text(
+                                "$percent% Complete",
+                                style: TextStyle(
+                                  color: Color.fromRGBO(31, 31, 31, 1),
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w400,
+                                  height: 1,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                        Text(
-                          "3 steps remaining",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16.sp,
-                            height: 1.2,
-                            fontWeight: FontWeight.w400,
-                          ),
+
+                        SizedBox(height: 1.h),
+                        LinearProgressIndicator(
+                          value: progress,
+                          color: Color.fromRGBO(112, 112, 112, 1),
+                          backgroundColor: Color.fromRGBO(255, 255, 255, 1),
+                          minHeight: 8,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        SizedBox(height: 1.8.h),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Complete Profile",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14.sp,
+                                height: 1.2,
+                              ),
+                            ),
+                            Text(
+                              "$remaining steps remaining",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16.sp,
+                                height: 1.2,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
-                ),
-              ),
+                  ),
+                );
+              }),
 
               SizedBox(height: 3.0.h),
 

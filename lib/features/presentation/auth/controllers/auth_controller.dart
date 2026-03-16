@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:restaurant_app/features/domain/auth/auth_repositories/auth_repository.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:restaurant_app/features/presentation/onboarding/di/onboarding_di.dart';
+import 'package:restaurant_app/features/presentation/onboarding/screens/onborading_screen3.dart';
 
 class AuthController extends GetxController {
   final AuthRepository authRepository;
   AuthController(this.authRepository);
   var isLoading = false.obs;
+  static const int _totalOnboardingSteps = 20;
 
   Future<void> signUp({
     required String fullName,
@@ -45,6 +48,7 @@ class AuthController extends GetxController {
         Get.offAllNamed("/login");
       }
     } catch (e) {
+      
       Get.snackbar(
         "Error",
         e.toString(),
@@ -79,7 +83,7 @@ class AuthController extends GetxController {
           backgroundColor: Color.fromRGBO(31, 31, 31, 0.8),
           colorText: Colors.white,
         );
-        Get.offNamed("/onboardingScreen1");
+        Get.offAllNamed("/main");
       }
     } catch (e) {
       Get.snackbar(
@@ -115,16 +119,16 @@ class AuthController extends GetxController {
     }
   }
 
-  Future sendOtp(String email) async{
-    final result=await authRepository.sendOtp(email);
-    if(result["success"]==true){
-      Get.toNamed("/otpScreen", arguments:email);
+  Future sendOtp(String email) async {
+    final result = await authRepository.sendOtp(email);
+    if (result["success"] == true) {
+      Get.toNamed("/otpScreen", arguments: email);
     }
   }
 
-  Future verifyOtp(String email, String otp) async{
+  Future verifyOtp(String email, String otp) async {
     final result = await authRepository.verifyOtp(email, otp);
-    if(result["success"]==true){
+    if (result["success"] == true) {
       Get.toNamed("/resetPassword", arguments: email);
     }
   }

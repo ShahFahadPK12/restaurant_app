@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:flutter/services.dart';
+import 'package:restaurant_app/features/presentation/onboarding/controllers/onboarding_validation_controller.dart';
 
 class OnboardingScreen7 extends StatefulWidget {
   const OnboardingScreen7({super.key});
@@ -12,11 +14,16 @@ class OnboardingScreen7 extends StatefulWidget {
 class _OnboardingScreen7State extends State<OnboardingScreen7> {
   String selectedUnit = "Kilogram";
   TextEditingController weightController = TextEditingController();
+  // Shared validation controller (created in OnboradingScreen3).
+  final OnboardingValidationController _validationController =
+      Get.find<OnboardingValidationController>();
 
   @override
   void initState() {
     super.initState();
     weightController.text = "60";
+    // Set initial default for validation.
+    _validationController.weight.value = 60;
   }
 
   @override
@@ -91,6 +98,10 @@ class _OnboardingScreen7State extends State<OnboardingScreen7> {
                         keyboardType: TextInputType.number,
                         textAlign: TextAlign.center,
                         textAlignVertical: TextAlignVertical.center,
+                        onChanged: (value) {
+                          final parsed = int.tryParse(value) ?? 0;
+                          _validationController.weight.value = parsed;
+                        },
 
                         // inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                         style: TextStyle(

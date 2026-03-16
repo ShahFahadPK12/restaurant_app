@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:restaurant_app/features/presentation/onboarding/controllers/onboarding_validation_controller.dart';
 
 class OnboardingScreen5 extends StatefulWidget {
   const OnboardingScreen5({super.key});
@@ -12,6 +14,9 @@ class OnboardingScreen5 extends StatefulWidget {
 class _OnboardingScreen5State extends State<OnboardingScreen5> {
   DateTime? selectedDate;
   final TextEditingController _controller = TextEditingController();
+  // Shared validation controller (created in OnboradingScreen3).
+  final OnboardingValidationController _validationController =
+      Get.find<OnboardingValidationController>();
 
   Future<void> _pickDate() async {
     DateTime now = DateTime.now();
@@ -28,6 +33,8 @@ class _OnboardingScreen5State extends State<OnboardingScreen5> {
         selectedDate = picked;
         _controller.text = DateFormat('MM/dd/yyyy').format(picked);
       });
+      // Save selection for validation.
+      _validationController.dateOfBirth.value = picked;
     }
   }
 

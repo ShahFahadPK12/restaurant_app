@@ -228,6 +228,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           text: "Sign Up",
                           onTap: () {
                             if (_formKey.currentState!.validate()) {
+                              print("Signup Clicked");
                               authController.signUp(
                                 fullName: nameController.text,
                                 email: emailController.text,
