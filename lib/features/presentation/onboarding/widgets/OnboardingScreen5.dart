@@ -18,6 +18,16 @@ class _OnboardingScreen5State extends State<OnboardingScreen5> {
   final OnboardingValidationController _validationController =
       Get.find<OnboardingValidationController>();
 
+  @override
+  void initState() {
+    super.initState();
+    // Agar user wapas aaye to pehli date show ho.
+    selectedDate = _validationController.dateOfBirth.value;
+    if (selectedDate != null) {
+      _controller.text = DateFormat('MM/dd/yyyy').format(selectedDate!);
+    }
+  }
+
   Future<void> _pickDate() async {
     DateTime now = DateTime.now();
 
@@ -33,7 +43,7 @@ class _OnboardingScreen5State extends State<OnboardingScreen5> {
         selectedDate = picked;
         _controller.text = DateFormat('MM/dd/yyyy').format(picked);
       });
-      // Save selection for validation.
+      // Roman Urdu: selected date ko validation ke liye save kar rahe hain.
       _validationController.dateOfBirth.value = picked;
     }
   }

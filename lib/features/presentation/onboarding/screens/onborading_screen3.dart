@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:restaurant_app/features/presentation/onboarding/controller/onboarding_controller.dart';
 import 'package:restaurant_app/features/presentation/onboarding/widgets/OnboardingScreen10.dart';
 import 'package:restaurant_app/features/presentation/onboarding/widgets/OnboardingScreen11.dart';
 import 'package:restaurant_app/features/presentation/onboarding/widgets/OnboardingScreen12.dart';
@@ -24,6 +29,7 @@ import 'package:restaurant_app/features/presentation/onboarding/widgets/onboardi
 import 'package:restaurant_app/features/presentation/onboarding/widgets/onboardingScreen22.dart';
 import 'package:restaurant_app/features/presentation/onboarding/widgets/onboardingScreen23.dart';
 import 'package:restaurant_app/features/presentation/onboarding/controllers/onboarding_progress_controller.dart';
+import 'package:restaurant_app/features/presentation/onboarding/controllers/onboarding_data_controller.dart';
 import 'package:restaurant_app/features/presentation/onboarding/controllers/onboarding_validation_controller.dart';
 import 'package:restaurant_app/features/presentation/onboarding/di/onboarding_di.dart';
 
@@ -41,6 +47,8 @@ class _OnboradingScreen3State extends State<OnboradingScreen3> {
   int currentStep = 0;
   late final OnboardingProgressController _progressController;
   late final OnboardingValidationController _validationController;
+  late final OnboardingDataController _dataController;
+  bool _isRestoring = true;
 
   @override
   void initState() {
@@ -58,6 +66,7 @@ class _OnboradingScreen3State extends State<OnboradingScreen3> {
         permanent: true,
       );
     }
+    _dataController = provideOnboardingDataController();
     int? requestedStep = widget.initialStep;
 
     if (requestedStep == null) {
@@ -72,6 +81,16 @@ class _OnboradingScreen3State extends State<OnboradingScreen3> {
         requestedStep < totalSteps) {
       currentStep = requestedStep;
     }
+
+    // Roman Urdu: local storage se data restore kar ke controller me set.
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _dataController.restoreToValidation(_validationController);
+      if (mounted) {
+        setState(() {
+          _isRestoring = false;
+        });
+      }
+    });
   }
 
   void nextStep() {
@@ -174,94 +193,141 @@ class _OnboradingScreen3State extends State<OnboradingScreen3> {
     }
   }
 
+  // List<Widget> steps = [
+  //   OnboardingScreen4(),
+  //   OnboardingScreen5(),
+  //   OnboardingScreen6(),
+  //   OnboardingScreen7(),
+  //   OnboardingScreen8(),
+  //   OnboardingScreen9(),
+  //   OnboardingScreen10(),
+  //   OnboardingScreen11(),
+  //   OnboardingScreen12(),
+  //   OnboardingScreen13(),
+  //   OnboardingScreen14(),
+  //   OnboardingScreen15(),
+  //   Onboardingscreen16(),
+  //   OnboardingScreen17(),
+  //   OnboardingScreen18(),
+  //   Onboardingscreen19(),
+  //   Onboardingscreen20(),
+  //   Onboardingscreen21(),
+  //   Onboardingscreen22(),
+  //   Onboardingscreen23(),
+  // ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromRGBO(235, 235, 235, 1),
       body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 4.5.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  /// Back Button
-                  // IconButton(
-                  //   onPressed: previousStep,
-                  //   icon: Image.asset(
-                  //     "assets/auth/back arrow.png",
-                  //     width: 8,
-                  //     height: 12,
-                  //   ),
-                  // ),
-                  GestureDetector(
-                    onTap: previousStep,
-                    child: Image.asset(
-                      "assets/auth/back arrow.png",
-                      width: 8,
-                      height: 12,
-                    ),
-                  ),
-                  SizedBox(width: 6.w),
+        child: _isRestoring
+            ? const Center(child: CircularProgressIndicator())
+            : Padding(
+                padding: EdgeInsets.symmetric(horizontal: 4.5.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        GestureDetector(
+                          onTap: previousStep,
+                          child: Image.asset(
+                            "assets/auth/back arrow.png",
+                            width: 8,
+                            height: 12,
+                          ),
+                        ),
+                        SizedBox(width: 6.w),
 
-                  /// Progress Bar
-                  Expanded(
-                    child: LinearProgressIndicator(
-                      value: (currentStep + 1) / totalSteps,
-                      backgroundColor: const Color.fromRGBO(209, 209, 209, 1),
-                      color: Color.fromRGBO(0, 0, 0, 1),
-                      borderRadius: BorderRadius.circular(50),
+                        Expanded(
+                          // child: Obx(
+                          //   () => LinearProgressIndicator(
+                          //     value: controller.progress,
+                          //     backgroundColor: Color.fromRGBO(209, 209, 209, 1),
+                          //     color: Colors.black,
+                          //     minHeight: 4,
+                          //     borderRadius: BorderRadius.circular(50),
+                          //   ),
+                          // ),
+                          child: LinearProgressIndicator(
+                            value: (currentStep + 1) / totalSteps,
+                            backgroundColor:
+                                const Color.fromRGBO(209, 209, 209, 1),
+                            color: Color.fromRGBO(0, 0, 0, 1),
+                            borderRadius: BorderRadius.circular(50),
 
-                      minHeight: 4,
-                    ),
-                  ),
+                            minHeight: 4,
+                          ),
+                        ),
 
-                  SizedBox(width: 6.w),
-                  GestureDetector(
-                    onTap: () async => skipOnboarding(),
-                    child: Text(
-                      "Skip",
-                      style: TextStyle(
-                        fontSize: 22.sp,
-                        fontWeight: FontWeight.w400,
-                        height: 1,
-                        color: Color.fromRGBO(10, 6, 21, 1),
-                      ),
+                        SizedBox(width: 6.w),
+                        GestureDetector(
+                          onTap: () async => skipOnboarding(),
+                          child: Text(
+                            "Skip",
+                            style: TextStyle(
+                              fontSize: 22.sp,
+                              fontWeight: FontWeight.w400,
+                              height: 1,
+                              color: Color.fromRGBO(10, 6, 21, 1),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
+                    SizedBox(height: 6.1.h),
+
+                    /// Dynamic Step Content
+                    Expanded(child: buildStepContent()),
+
+                    CustomBottomButtonForOnboarding(
+                      text: "Next",
+                      onTap: () async {
+                        final error =
+                            _validationController.validateStep(currentStep);
+                        if (error != null) {
+                          Get.snackbar(
+                            "Validation",
+                            error,
+                            backgroundColor:
+                                const Color.fromRGBO(31, 31, 31, 0.8),
+                            colorText: Colors.white,
+                          );
+                          return;
+                        }
+
+                        // Roman Urdu: har step par data local storage me save.
+                        await _dataController.saveLocally(
+                          _validationController.toOnboardingData(),
+                        );
+
+                        if (currentStep == totalSteps - 1) {
+                          _progressController.saveCompletedSteps(totalSteps);
+
+                          final success =
+                              await _dataController.submitLocalDataToServer();
+                          if (!success) {
+                            Get.snackbar(
+                              "Error",
+                              "Data submit nahi hua. Pehle login aur token check karein.",
+                              backgroundColor:
+                                  const Color.fromRGBO(31, 31, 31, 0.8),
+                              colorText: Colors.white,
+                            );
+                            return;
+                          }
+
+                          showCompletionBottomSheet(context);
+                        } else {
+                          nextStep();
+                        }
+                      },
+                    ),
+                    SizedBox(height: 4.h),
+                  ],
+                ),
               ),
-              SizedBox(height: 6.1.h),
-
-              /// Dynamic Step Content
-              Expanded(child: buildStepContent()),
-
-              CustomBottomButtonForOnboarding(
-                text: "Next",
-                onTap: () {
-                  final error = _validationController.validateStep(currentStep);
-                  if (error != null) {
-                    Get.snackbar(
-                      "Validation",
-                      error,
-                      backgroundColor: const Color.fromRGBO(31, 31, 31, 0.8),
-                      colorText: Colors.white,
-                    );
-                    return;
-                  }
-                  if (currentStep == totalSteps - 1) {
-                    _progressController.saveCompletedSteps(totalSteps);
-                    showCompletionBottomSheet(context);
-                  } else {
-                    nextStep();
-                  }
-                },
-              ),
-              SizedBox(height: 4.h),
-            ],
-          ),
-        ),
       ),
     );
   }

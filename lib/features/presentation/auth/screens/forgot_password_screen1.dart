@@ -92,7 +92,7 @@ class _ForgotPasswordScreen1State extends State<ForgotPasswordScreen1> {
                     ),
                   ),
                   Text(
-                    "Enter a 4 digit code we have sent to your email.",
+                    "Enter a 6 digit code we have sent to your email.",
                     style: TextStyle(
                       fontSize: 15.sp,
                       fontWeight: FontWeight.w400,
@@ -120,25 +120,34 @@ class _ForgotPasswordScreen1State extends State<ForgotPasswordScreen1> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      GestureDetector(
-                        onTap: () {
-                          final email = Get.arguments;
-                          authController.sendOtp(email);
-                          Get.snackbar(
-                            "OTP Sent",
-                            "A new OTP has been sent to your email",
-                            backgroundColor: Color.fromRGBO(31, 31, 31, 1),
-                            colorText: Colors.white,
-                          );
-                        },
-                        child: Text(
-                          "Resend",
-                          style: TextStyle(
-                            fontSize: 15.sp,
-                            fontWeight: FontWeight.w400,
-                            color: Color.fromRGBO(112, 112, 112, 1),
-                          ),
-                        ),
+                      Obx(
+                        () => authController.isLoading.value
+                            ? Center(child: CircularProgressIndicator())
+                            : GestureDetector(
+                                onTap: () {
+                                  final email = Get.arguments;
+                                  authController.sendOtp(email);
+                                  Get.snackbar(
+                                    "OTP Sent",
+                                    "A new OTP has been sent to your email",
+                                    backgroundColor: Color.fromRGBO(
+                                      31,
+                                      31,
+                                      31,
+                                      1,
+                                    ),
+                                    colorText: Colors.white,
+                                  );
+                                },
+                                child: Text(
+                                  "Resend",
+                                  style: TextStyle(
+                                    fontSize: 15.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: Color.fromRGBO(112, 112, 112, 1),
+                                  ),
+                                ),
+                              ),
                       ),
                     ],
                   ),
@@ -151,31 +160,37 @@ class _ForgotPasswordScreen1State extends State<ForgotPasswordScreen1> {
                       children: [
                         Obx(
                           () => authController.isLoading.value
-                              ? Center(child: CircularProgressIndicator())
+                              ? Center(
+                                  child: CircularProgressIndicator(
+                                    color: Color.fromRGBO(31, 31, 31, 1),
+                                  ),
+                                )
                               : ElevatedButton(
-                                  onPressed: () {
-                                    if (c1.text.isEmpty ||
-                                        c2.text.isEmpty ||
-                                        c3.text.isEmpty ||
-                                        c4.text.isEmpty ||
-                                        c5.text.isEmpty ||
-                                        c6.text.isEmpty) {
-                                      Get.snackbar(
-                                        "Error",
-                                        "Please Enter complete OTP",
-                                      );
-                                      return;
-                                    }
-                                    String otp =
-                                        c1.text +
-                                        c2.text +
-                                        c3.text +
-                                        c4.text +
-                                        c5.text +
-                                        c6.text;
+                                  onPressed: authController.isLoading.value
+                                      ? null
+                                      : () {
+                                          if (c1.text.isEmpty ||
+                                              c2.text.isEmpty ||
+                                              c3.text.isEmpty ||
+                                              c4.text.isEmpty ||
+                                              c5.text.isEmpty ||
+                                              c6.text.isEmpty) {
+                                            Get.snackbar(
+                                              "Error",
+                                              "Please Enter complete OTP",
+                                            );
+                                            return;
+                                          }
+                                          String otp =
+                                              c1.text +
+                                              c2.text +
+                                              c3.text +
+                                              c4.text +
+                                              c5.text +
+                                              c6.text;
 
-                                    authController.verifyOtp(email, otp);
-                                  },
+                                          authController.verifyOtp(email, otp);
+                                        },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Color.fromRGBO(
                                       96,

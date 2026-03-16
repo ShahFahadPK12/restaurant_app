@@ -72,4 +72,39 @@ class UserRepository implements AuthRepository {
   Future verifyOtp(String email, String otp){
     return remoteDataSource.verifyOtp(email, otp);
   }
+
+  @override
+  Future resetPassword(String email,String password){
+    return remoteDataSource.resetPassword(email, password);
+  }
+
+  @override
+  Future<Map<String, dynamic>> uploadUserImage({
+    required String token,
+    required String imagePath,
+  }) {
+    return remoteDataSource.uploadUserImage(
+      token: token,
+      imagePath: imagePath,
+    );
+  }
+
+  @override
+  Future<Map<String, dynamic>> updateUserProfile({
+    required int userId,
+    required String token,
+    String? fullName,
+    String? email,
+    String? phoneNumber,
+    int? imageId,
+  }) {
+    return remoteDataSource.updateUserProfile(
+      userId: userId,
+      token: token,
+      fullName: fullName,
+      email: email,
+      phoneNumber: phoneNumber,
+      imageId: imageId,
+    );
+  }
 }

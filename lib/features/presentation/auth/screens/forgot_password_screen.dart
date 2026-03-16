@@ -152,7 +152,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                   Obx(
                                     () => authController.isLoading.value
                                         ? Center(
-                                            child: CircularProgressIndicator(),
+                                            child: CircularProgressIndicator(
+                                              color: Colors.white,
+                                            ),
                                           )
                                         : ElevatedButton(
                                             onPressed: () {
@@ -161,7 +163,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                                 authController.sendOtp(
                                                   emailController.text,
                                                 );
-                                                
                                               }
                                             },
                                             style: ElevatedButton.styleFrom(

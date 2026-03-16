@@ -1,5 +1,7 @@
 import "package:flutter/material.dart";
+import "package:get/get.dart";
 import "package:responsive_sizer/responsive_sizer.dart";
+import "package:restaurant_app/features/presentation/onboarding/controllers/onboarding_validation_controller.dart";
 
 
 class Onboardingscreen20 extends StatefulWidget {
@@ -10,7 +12,17 @@ class Onboardingscreen20 extends StatefulWidget {
 }
 
 class _Onboardingscreen20State extends State<Onboardingscreen20> {
-  String selectedOption = "Less than 10 minutes";
+  String? selectedOption;
+  // Shared validation controller (created in OnboradingScreen3).
+  final OnboardingValidationController _validationController =
+      Get.find<OnboardingValidationController>();
+
+  @override
+  void initState() {
+    super.initState();
+    // Roman Urdu: agar pehle se selection ho to wapas show kar do.
+    selectedOption = _validationController.mealPrepTime.value;
+  }
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -63,6 +75,8 @@ class _Onboardingscreen20State extends State<Onboardingscreen20> {
         setState(() {
           selectedOption = text;
         });
+        // Roman Urdu: user ki selection save kar rahe hain.
+        _validationController.mealPrepTime.value = text;
       },
       child: Container(
         width: double.infinity,

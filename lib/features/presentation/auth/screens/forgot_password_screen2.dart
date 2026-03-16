@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:restaurant_app/features/data/auth/user_data_source/remote/auth_remote_data_source.dart';
+import 'package:restaurant_app/features/data/auth/user_repository/user_repository.dart';
+import 'package:restaurant_app/features/presentation/auth/controllers/auth_controller.dart';
 import 'package:restaurant_app/features/presentation/auth/widgets/custom_button.dart';
 import 'package:restaurant_app/features/presentation/auth/widgets/custom_text_field.dart';
-
-
 
 class ForgotPasswordScreen2 extends StatefulWidget {
   const ForgotPasswordScreen2({super.key});
@@ -18,6 +21,9 @@ class _ForgotPasswordScreen2State extends State<ForgotPasswordScreen2> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
   GlobalKey<FormState> _formKey = GlobalKey();
+  final authController = Get.put(
+    AuthController(UserRepository(AuthRemoteDataSource())),
+  );
 
   @override
   void dispose() {
@@ -28,6 +34,7 @@ class _ForgotPasswordScreen2State extends State<ForgotPasswordScreen2> {
 
   @override
   Widget build(BuildContext context) {
+    final email = Get.arguments;
     return Scaffold(
       backgroundColor: Color.fromRGBO(235, 235, 235, 1),
       body: SafeArea(
@@ -119,7 +126,25 @@ class _ForgotPasswordScreen2State extends State<ForgotPasswordScreen2> {
                     //Spacer(),
                     //SizedBox(height: MediaQuery.of(context).size.height * 0.40),
                     SizedBox(height: 38.h),
-                    CustomButton(text: "Reset Password", onTap: () {}),
+                    Obx(
+                      () => authController.isLoading.value
+                          ? Center(
+                              child: CircularProgressIndicator(
+                                color: Color.fromRGBO(31, 31, 31, 1),
+                              ),
+                            )
+                          : CustomButton(
+                              text: "Reset Password",
+                              onTap: () {
+                                if (_formKey.currentState!.validate()) {
+                                  authController.resetPassword(
+                                    email,
+                                    passwordController.text,
+                                  );
+                                }
+                              },
+                            ),
+                    ),
                   ],
                 ),
               ),

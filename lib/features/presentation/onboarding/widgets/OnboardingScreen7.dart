@@ -12,7 +12,7 @@ class OnboardingScreen7 extends StatefulWidget {
 }
 
 class _OnboardingScreen7State extends State<OnboardingScreen7> {
-  String selectedUnit = "Kilogram";
+  String? selectedUnit;
   TextEditingController weightController = TextEditingController();
   // Shared validation controller (created in OnboradingScreen3).
   final OnboardingValidationController _validationController =
@@ -21,9 +21,11 @@ class _OnboardingScreen7State extends State<OnboardingScreen7> {
   @override
   void initState() {
     super.initState();
-    weightController.text = "60";
-    // Set initial default for validation.
-    _validationController.weight.value = 60;
+    // Roman Urdu: agar pehle se value ho to wapas show kar do.
+    if (_validationController.weight.value != null) {
+      weightController.text = _validationController.weight.value.toString();
+    }
+    selectedUnit = _validationController.weightUnit.value;
   }
 
   @override
@@ -99,7 +101,8 @@ class _OnboardingScreen7State extends State<OnboardingScreen7> {
                         textAlign: TextAlign.center,
                         textAlignVertical: TextAlignVertical.center,
                         onChanged: (value) {
-                          final parsed = int.tryParse(value) ?? 0;
+                          final parsed = int.tryParse(value);
+                          // Roman Urdu: user ka weight save kar rahe hain.
                           _validationController.weight.value = parsed;
                         },
 
@@ -119,7 +122,9 @@ class _OnboardingScreen7State extends State<OnboardingScreen7> {
                   const SizedBox(width: 10),
 
                   Text(
-                    selectedUnit == "Kilogram" ? "kg" : "lb",
+                    selectedUnit == null
+                        ? ""
+                        : (selectedUnit == "Kilogram" ? "kg" : "lb"),
                     style: TextStyle(fontSize: 18.sp, color: Colors.black),
                   ),
                 ],
@@ -141,6 +146,8 @@ class _OnboardingScreen7State extends State<OnboardingScreen7> {
         setState(() {
           selectedUnit = unit;
         });
+        // Roman Urdu: unit selection ko validation ke liye save kar rahe hain.
+        _validationController.weightUnit.value = unit;
       },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 8),

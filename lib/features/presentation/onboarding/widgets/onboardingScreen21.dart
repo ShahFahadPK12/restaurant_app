@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:restaurant_app/features/presentation/onboarding/controllers/onboarding_validation_controller.dart';
 
 class Onboardingscreen21 extends StatefulWidget {
   const Onboardingscreen21({super.key});
@@ -9,7 +11,17 @@ class Onboardingscreen21 extends StatefulWidget {
 }
 
 class _Onboardingscreen21State extends State<Onboardingscreen21> {
-  String selectedOption = "Never or rarely (0-1x per week)";
+  String? selectedOption;
+  // Shared validation controller (created in OnboradingScreen3).
+  final OnboardingValidationController _validationController =
+      Get.find<OnboardingValidationController>();
+
+  @override
+  void initState() {
+    super.initState();
+    // Roman Urdu: agar pehle se selection ho to wapas show kar do.
+    selectedOption = _validationController.eatOutFrequency.value;
+  }
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -60,6 +72,8 @@ class _Onboardingscreen21State extends State<Onboardingscreen21> {
         setState(() {
           selectedOption = text;
         });
+        // Roman Urdu: user ki selection save kar rahe hain.
+        _validationController.eatOutFrequency.value = text;
       },
       child: Container(
         width: double.infinity,

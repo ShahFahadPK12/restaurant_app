@@ -20,13 +20,16 @@ class _OnboardingScreen6State extends State<OnboardingScreen6> {
   @override
   void initState() {
     super.initState();
-    heightController.text = height.toString();
-    // Set initial default for validation.
-    _validationController.height.value = height;
+    // Roman Urdu: agar pehle se value ho to wapas show kar do.
+    if (_validationController.height.value != null) {
+      height = _validationController.height.value;
+      heightController.text = _validationController.height.value.toString();
+    }
+    selectedUnit = _validationController.heightUnit.value;
   }
 
-  String selectedUnit = "Centimetre";
-  int height = 168;
+  String? selectedUnit;
+  int? height;
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -105,11 +108,12 @@ class _OnboardingScreen6State extends State<OnboardingScreen6> {
                             hintText: "168",
                           ),
                           onChanged: (value) {
+                            final parsed = int.tryParse(value);
                             setState(() {
-                              height = int.tryParse(value) ?? 0;
+                              height = parsed;
                             });
-                            // Save value for validation.
-                            _validationController.height.value = height;
+                            // Roman Urdu: user ki height save kar rahe hain.
+                            _validationController.height.value = parsed;
                           },
                         ),
                       ),
@@ -117,7 +121,9 @@ class _OnboardingScreen6State extends State<OnboardingScreen6> {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    selectedUnit == "Feet" ? "ft" : "cm",
+                    selectedUnit == null
+                        ? ""
+                        : (selectedUnit == "Feet" ? "ft" : "cm"),
                     style: const TextStyle(fontSize: 18),
                   ),
                 ],
@@ -170,6 +176,8 @@ class _OnboardingScreen6State extends State<OnboardingScreen6> {
         setState(() {
           selectedUnit = unit;
         });
+        // Roman Urdu: unit selection ko validation ke liye save kar rahe hain.
+        _validationController.heightUnit.value = unit;
       },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),

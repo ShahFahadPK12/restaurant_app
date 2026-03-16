@@ -1,6 +1,7 @@
-
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:restaurant_app/features/presentation/onboarding/controllers/onboarding_validation_controller.dart';
 
 class OnboardingScreen8 extends StatefulWidget {
   const OnboardingScreen8({super.key});
@@ -10,51 +11,63 @@ class OnboardingScreen8 extends StatefulWidget {
 }
 
 class _OnboardingScreen8State extends State<OnboardingScreen8> {
-  String selectedActivity = "SEDENTARY";
+  String? selectedActivity;
+  // Shared validation controller (created in OnboradingScreen3).
+  final OnboardingValidationController _validationController =
+      Get.find<OnboardingValidationController>();
+
+  @override
+  void initState() {
+    super.initState();
+    // Roman Urdu: agar pehle se selection ho to wapas show kar do.
+    selectedActivity = _validationController.activityLevel.value;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        /// Title
-        Text(
-          "What is your activity\nlevel ?",
-          style: TextStyle(
-            fontSize: 20.sp,
-            fontWeight: FontWeight.bold,
-            color: const Color(0xFF1F1F1F),
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          /// Title
+          Text(
+            "What is your activity\nlevel ?",
+            style: TextStyle(
+              fontSize: 20.sp,
+              fontWeight: FontWeight.bold,
+              color: const Color(0xFF1F1F1F),
+            ),
           ),
-        ),
 
-        SizedBox(height: 1.5.h),
+          SizedBox(height: 1.5.h),
 
-        /// Subtitle
-        Text(
-          "Select Choice",
-          style: TextStyle(fontSize: 16.sp, color: const Color(0xFF707070)),
-        ),
+          /// Subtitle
+          Text(
+            "Select Choice",
+            style: TextStyle(fontSize: 16.sp, color: const Color(0xFF707070)),
+          ),
 
-        SizedBox(height: 21.h),
+          SizedBox(height: 21.h),
 
-        _buildActivityButton("SEDENTARY"),
+          _buildActivityButton("SEDENTARY"),
 
-        SizedBox(height: 2.h),
+          SizedBox(height: 2.h),
 
-        Wrap(
-          spacing: 4.w,
-          runSpacing: 2.h,
-          children: [
-            _buildActivityButton("MODERATELY ACTIVE"),
+          Wrap(
+            spacing: 4.w,
+            runSpacing: 2.h,
+            children: [
+              _buildActivityButton("MODERATELY ACTIVE"),
 
-            _buildActivityButton("ACTIVE"),
-          ],
-        ),
+              _buildActivityButton("ACTIVE"),
+            ],
+          ),
 
-        SizedBox(height: 2.h),
+          SizedBox(height: 2.h),
 
-        _buildActivityButton("VERY ACTIVE"),
-      ],
+          _buildActivityButton("VERY ACTIVE"),
+        ],
+      ),
     );
   }
 
@@ -66,6 +79,8 @@ class _OnboardingScreen8State extends State<OnboardingScreen8> {
         setState(() {
           selectedActivity = title;
         });
+        // Roman Urdu: user ki selection save kar rahe hain.
+        _validationController.activityLevel.value = title;
       },
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),

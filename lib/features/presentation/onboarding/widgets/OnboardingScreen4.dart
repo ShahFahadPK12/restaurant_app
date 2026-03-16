@@ -17,6 +17,13 @@ class _OnboardingScreen4State extends State<OnboardingScreen4> {
       Get.find<OnboardingValidationController>();
 
   @override
+  void initState() {
+    super.initState();
+    // Agar user wapas aaye to pehli selection restore ho jaye.
+    selectedGender = _validationController.gender.value;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,7 +56,7 @@ class _OnboardingScreen4State extends State<OnboardingScreen4> {
                 setState(() {
                   selectedGender = "Male";
                 });
-                // Save selection for validation.
+                // Roman Urdu: user ki selection save kar rahe hain.
                 _validationController.gender.value = "Male";
               },
               child: Container(
@@ -89,7 +96,7 @@ class _OnboardingScreen4State extends State<OnboardingScreen4> {
                 setState(() {
                   selectedGender = "Female";
                 });
-                // Save selection for validation.
+                // Roman Urdu: user ki selection save kar rahe hain.
                 _validationController.gender.value = "Female";
               },
               child: Container(

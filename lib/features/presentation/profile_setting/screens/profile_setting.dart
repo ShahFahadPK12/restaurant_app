@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/src/extension_instance.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -9,6 +7,7 @@ import 'dart:io';
 import 'package:restaurant_app/features/data/auth/user_data_source/remote/auth_remote_data_source.dart';
 import 'package:restaurant_app/features/data/auth/user_repository/user_repository.dart';
 import 'package:restaurant_app/features/presentation/auth/controllers/auth_controller.dart';
+import 'package:get_storage/get_storage.dart';
 
 class ProfileSettingsScreen extends StatefulWidget {
   const ProfileSettingsScreen({Key? key}) : super(key: key);
@@ -33,6 +32,17 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
 
   // Image picker instance
   final ImagePicker _imagePicker = ImagePicker();
+
+  @override
+  void initState() {
+    super.initState();
+    // Roman Urdu: agar email local storage me ho to prefill kar dein.
+    final box = GetStorage();
+    final storedEmail = box.read("email");
+    if (storedEmail is String && storedEmail.isNotEmpty) {
+      _emailController.text = storedEmail;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -214,22 +224,39 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
               ),
 
               SizedBox(height: 8.0.h),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _saveProfile,
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(vertical: 1.7.h),
-                    backgroundColor: Color.fromRGBO(31, 31, 31, 1),
-                    foregroundColor: Colors.white,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50),
+              Obx(
+                () => SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed:
+                        authController.isLoading.value ? null : _saveProfile,
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(vertical: 1.7.h),
+                      backgroundColor: Color.fromRGBO(31, 31, 31, 1),
+                      foregroundColor: Colors.white,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50),
+                      ),
                     ),
-                  ),
-                  child: const Text(
-                    'Save',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    child: authController.isLoading.value
+                        ? SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2.2,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Colors.white,
+                              ),
+                            ),
+                          )
+                        : const Text(
+                            'Save',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                   ),
                 ),
               ),
@@ -385,14 +412,12 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
   }
 
   void _saveProfile() {
-    // Here you can save the profile data with image
-    String message = 'Profile saved successfully';
-    if (_selectedImage != null) {
-      message += ' with new profile picture';
-    }
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), backgroundColor: Colors.green),
+    // Roman Urdu: yahan profile update hoti hai (name/email/phone + optional image).
+    authController.updateProfile(
+      fullName: _nameController.text,
+      email: _emailController.text,
+      phoneNumber: _phoneController.text,
+      imageFile: _selectedImage,
     );
   }
 

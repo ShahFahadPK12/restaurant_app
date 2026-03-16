@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:restaurant_app/features/presentation/home/widgets/nutritions_box.dart';
@@ -8,6 +11,7 @@ import 'package:restaurant_app/features/presentation/onboarding/controllers/onbo
 import 'package:restaurant_app/features/presentation/onboarding/di/onboarding_di.dart';
 import 'package:restaurant_app/features/presentation/onboarding/screens/onborading_screen3.dart';
 import 'package:restaurant_app/features/presentation/settings/screens/settings_screen.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -17,6 +21,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   static const int _totalOnboardingSteps = 20;
+  // Roman Urdu: API ka base URL (same jo data source me hai).
+  // Yahan se hum image ka full URL banate hain.
+  static const String _apiBaseUrl = "http://10.0.2.2:1337/api";
 
   String selectedDay = "Today";
   int expandedIndex = -1;
@@ -24,6 +31,8 @@ class _HomeScreenState extends State<HomeScreen> {
   DateTime? selectedDate;
   final TextEditingController _controller = TextEditingController();
   late final OnboardingProgressController _progressController;
+  String _displayName = "Guest";
+  String? _profileImagePathOrUrl;
 
   @override
   void initState() {
@@ -32,6 +41,44 @@ class _HomeScreenState extends State<HomeScreen> {
       totalSteps: _totalOnboardingSteps,
     );
     _progressController.loadProgress();
+    _loadProfileFromStorage();
+  }
+
+  // Roman Urdu: local storage se name aur image nikal kar UI me dikhane ke liye.
+  void _loadProfileFromStorage() {
+    final box = GetStorage();
+    final storedName = box.read("fullName");
+    final storedImage = box.read("profileImage");
+
+    setState(() {
+      _displayName = (storedName is String && storedName.trim().isNotEmpty)
+          ? storedName.trim()
+          : "Guest";
+      _profileImagePathOrUrl =
+          (storedImage is String && storedImage.trim().isNotEmpty)
+          ? storedImage.trim()
+          : null;
+    });
+  }
+
+  // Roman Urdu: image ka source decide karo (URL ho to NetworkImage, warna file).
+  ImageProvider _profileImageProvider() {
+    final image = _profileImagePathOrUrl;
+    if (image == null) {
+      return const AssetImage("assets/home/profile-img.png");
+    }
+    // Roman Urdu: agar image "/uploads/..." ho to ye relative URL hai.
+    // Is ko server ke base URL ke sath jor kar full URL banao.
+    if (image.startsWith("/uploads/")) {
+      final String serverRoot = _apiBaseUrl.replaceFirst("/api", "");
+      return NetworkImage("$serverRoot$image");
+    }
+    // Roman Urdu: agar already full URL hai to seedha NetworkImage use karo.
+    if (image.startsWith("http")) {
+      return NetworkImage(image);
+    }
+    // Roman Urdu: warna assume karo ye local file path hai.
+    return FileImage(File(image));
   }
 
   void _handleCompleteProfileTap() {
@@ -170,10 +217,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Row(
                     children: [
-                      CircleAvatar(
-                        radius: 40,
-                        backgroundImage: AssetImage(
-                          "assets/home/profile-img.png",
+                      GestureDetector(
+                        onTap: () async {
+                          await Get.toNamed("/profileSetting");
+                          // Roman Urdu: wapis aane par latest name/image reload karo.
+                          _loadProfileFromStorage();
+                        },
+                        child: CircleAvatar(
+                          radius: 40,
+                          backgroundImage: _profileImageProvider(),
                         ),
                       ),
                       SizedBox(width: 4.6.w),
@@ -184,8 +236,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             "Welcome\nback!",
                             style: TextStyle(fontSize: 14),
                           ),
+                          // Roman Urdu: yahan user ka name show ho ga.
+                          // Agar storage me name na ho to "Guest" show hota hai.
                           Text(
-                            "Junaid",
+                            _displayName,
                             style: TextStyle(
                               fontSize: 20.sp,
                               fontWeight: FontWeight.bold,
@@ -514,7 +568,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                     ),
-                 
                   ],
                 ),
               ),
@@ -862,8 +915,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
-
 
   /// 🔹 Status Badge
   Widget _statusBadge(String text, bool isCompleted) {
